@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  bp_username: MyString
+  last_name: MyString
+  first_name: MyString
+  organization: MyString
+  project_info: MyText
+  reason: MyText
+  identification: MyText
+  comments: MyText
+  appliance_id: MyString
+  license_key: MyString
+  valid_date: 2020-01-14
+
+two:
+  bp_username: MyString
+  last_name: MyString
+  first_name: MyString
+  organization: MyString
+  project_info: MyText
+  reason: MyText
+  identification: MyText
+  comments: MyText
+  appliance_id: MyString
+  license_key: MyString
+  valid_date: 2020-01-14

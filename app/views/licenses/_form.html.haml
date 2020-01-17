@@ -1,0 +1,54 @@
+- unless @errors.nil?
+  .enable-lists{style: "color:red; padding-left:10px;"}
+    %strong Errors On Form
+    %ul
+      - if @errors[:error].instance_of? OpenStruct
+        - errors_hash = @errors[:error].to_h.except :links, :context
+        - errors_hash.each do |field, error|
+          -# Highlight fields with errors.
+          <style>#license_#{field} { border: thin solid red; }</style>
+          %li
+            -# Display error message to users.
+            - if error.instance_of? OpenStruct
+              - error_hash = error.to_h.except :links, :context
+              - error_hash.each do |f, e|
+                = "#{e}"
+            - else
+              = field
+      - else
+        = @errors.to_json
+
+/ Override the bioportal.css for .required to avoid red text in the input fields.
+:css
+  .required {
+    color: black;
+  }
+  table.form {
+  	width: auto;
+  }
+  table.form td {
+  	width: 450px;
+  }
+%div{:style => "padding:10px"}
+  %table.form
+    %tr
+      %th Appliance ID: *
+      %td.top= text_field :license, :appliance_id, value: @license.appliance_id, required: true, oninvalid: "this.setCustomValidity('Please enter a valid Appliance ID')", oninput: "this.setCustomValidity('')", class: "required", tabindex: 1
+    %tr
+      %th First Name: *
+      %td.top= text_field :license, :first_name, value: @license.first_name, required: true, oninvalid: "this.setCustomValidity('Please enter your first name')", oninput: "this.setCustomValidity('')", class: "required", tabindex: 2
+    %tr
+      %th Last Name: *
+      %td.top= text_field :license, :last_name, value: @license.last_name, required: true, oninvalid: "this.setCustomValidity('Please enter your last name')", oninput: "this.setCustomValidity('')", class: "required", tabindex: 3
+    %tr
+      %th Organization: *
+      %td.top= text_field :license, :organization, value: @license.organization, required: true, oninvalid: "this.setCustomValidity('Please enter the name of your organization or company')", oninput: "this.setCustomValidity('')", class: "required", tabindex: 4
+    %tr
+      %th Project Purpose: *
+      %td= select :license, :purpose, License.purposes.map {|k, v| [v, k]}, {include_blank: 'Please Select:'}, required: true, oninvalid: "this.setCustomValidity('Please select your purpose from the list')", oninput: "this.setCustomValidity('')", class: "required", tabindex: 5
+    %tr
+      %th Project Information: *
+      %td= text_area :license, :project_info, value: @license.project_info, rows: 6, required: true, oninvalid: "this.setCustomValidity('Please include some information about your project')", oninput: "this.setCustomValidity('')", class: "required", tabindex: 6
+    %tr
+      %th Reason for Needing Appliance: *
+      %td= text_area :license, :reason, value: @license.reason, rows: 6, required: true, oninvalid: "this.setCustomValidity('Please describe your reason for needing an appliance')", oninput: "this.setCustomValidity('')", class: "required", tabindex: 7

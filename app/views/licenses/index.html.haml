@@ -1,0 +1,40 @@
+- @title = "My Licenses"
+
+%h1.tab_header My Licenses
+%p.tab_description
+  Below is a list of your current appliance licenses
+
+%div{:style => "padding:10px;"}
+  %span
+    - if session[:user].nil?
+      = button_to "Create New License", "/login", :method => :get
+    - else
+      = button_to "Create New License", new_license_path, :method => :get
+  %br/
+  %br/
+  %table#licenses.zebra{:cellpadding => "0", :cellspacing => "0"}
+    %thead
+      %tr
+        %th Appliance ID
+        %th License Key
+        %th Expires
+        %th Status
+    %tbody
+      - for license in @licenses
+        %tr
+          %td{:style => "vertical-align:top;", :width => "30%"}
+            %strong= link_to(license.appliance_id, license_path)
+            %br/
+            %span{:style => "font-size:75%; vertical-align:bottom;"}
+              = link_to("Edit", edit_license_path)
+              - if current_user_admin?
+                &nbsp;&nbsp;
+                = link_to("Delete (admin only)", license_path, :method => :delete, :confirm => "Are you sure?")
+          %td{:style => "vertical-align:top;", :width => "50%"}
+            = license.license_key
+
+
+          %td{:style => "vertical-align:top;", :width => "10%"}
+            = license.valid_date
+          %td
+            = license.approval_status
