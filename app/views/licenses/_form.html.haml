@@ -45,7 +45,7 @@
       %td.top= text_field :license, :organization, value: @license.organization, required: true, oninvalid: "this.setCustomValidity('Please enter the name of your organization or company')", oninput: "this.setCustomValidity('')", class: "required", tabindex: 4
     %tr
       %th Project Purpose: *
-      %td= select :license, :purpose, License.purposes.map {|k, v| [v, k]}, {include_blank: 'Please Select:'}, required: true, oninvalid: "this.setCustomValidity('Please select your purpose from the list')", oninput: "this.setCustomValidity('')", class: "required", tabindex: 5
+      %td= select :license, :license_purpose_id, @license_purposes.map {|lic| [lic.name, lic.id]}, {include_blank: 'Please Select:'}, required: true, oninvalid: "this.setCustomValidity('Please select your purpose from the list')", oninput: "this.setCustomValidity('')", class: "required", tabindex: 5
     %tr
       %th Project Information: *
       %td= text_area :license, :project_info, value: @license.project_info, rows: 6, required: true, oninvalid: "this.setCustomValidity('Please include some information about your project')", oninput: "this.setCustomValidity('')", class: "required", tabindex: 6

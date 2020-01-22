@@ -63,7 +63,7 @@ GEM
       popper_js (>= 1.12.9, < 2)
       sass (>= 3.5.2)
     builder (3.2.4)
-    byebug (11.0.1)
+    byebug (11.1.0)
     capybara (3.30.0)
       addressable
       mini_mime (>= 0.1.3)
@@ -163,6 +163,8 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.3.0)
       loofah (~> 2.3)
+    rails_lookup (0.0.4)
+      rails
     railties (5.1.7)
       actionpack (= 5.1.7)
       activesupport (= 5.1.7)
@@ -255,6 +257,7 @@ DEPENDENCIES
   pry
   puma (~> 3.7)
   rails (~> 5.1.7)
+  rails_lookup
   rest-client
   sass-rails (~> 5.0)
   selenium-webdriver

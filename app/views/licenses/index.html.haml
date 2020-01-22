@@ -23,18 +23,16 @@
       - for license in @licenses
         %tr
           %td{:style => "vertical-align:top;", :width => "30%"}
-            %strong= link_to(license.appliance_id, license_path)
+            %strong= link_to(license.appliance_id, license_path(license.id))
             %br/
             %span{:style => "font-size:75%; vertical-align:bottom;"}
-              = link_to("Edit", edit_license_path)
+              = link_to("Edit", edit_license_path(license.id))
               - if current_user_admin?
                 &nbsp;&nbsp;
-                = link_to("Delete (admin only)", license_path, :method => :delete, :confirm => "Are you sure?")
+                = link_to("Delete (admin only)", license_path(license.id), :method => :delete, :confirm => "Are you sure?")
           %td{:style => "vertical-align:top;", :width => "50%"}
             = license.license_key
-
-
           %td{:style => "vertical-align:top;", :width => "10%"}
             = license.valid_date
           %td
-            = license.approval_status
+            = license.approval_status.humanize

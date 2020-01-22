@@ -4,9 +4,7 @@ require 'uuid'
 
 class LicensesController < ApplicationController
   layout 'main'
-
   before_action :check_for_cancel, :only => [:create, :update]
-
 
   def index
     if session[:user].nil?
@@ -22,6 +20,7 @@ class LicensesController < ApplicationController
       redirect_to :controller => 'login', :action => 'index'
     else
       @license = License.new
+      @license_purposes = LicensePurpose.all.order(:sort_order)
     end
   end
 
@@ -29,6 +28,11 @@ class LicensesController < ApplicationController
   def show
 
 
+  end
+
+  def edit
+    @license = License.find(params[:id])
+    @license_purposes = LicensePurpose.all.order(:sort_order)
   end
 
   def create
@@ -39,10 +43,20 @@ class LicensesController < ApplicationController
     if @errors
       render action: "new"
     end
+
+    if @license.valid?
+      @license.bp_username = session[:user].username
+      @license.valid_date = Date.today + $LICENSE_VALIDITY_MONTHS.months
+      @license.save
+      redirect_to licenses_path
+    else
+      @errors = response_errors(@license.errors)
+      render action: "new"
+    end
   end
 
   def update
-
+    binding.pry
   end
 
   private
@@ -54,10 +68,10 @@ class LicensesController < ApplicationController
   end
 
   def validate
-    uid_valid = UUID.validate(params["license"]["appliance_id"])
+    uid_valid = UUID.validate(params[:license][:appliance_id])
 
     unless uid_valid
-      error = OpenStruct.new appliance_id_invalid: "#{params["license"]["appliance_id"]} is not a valid Appliance ID"
+      error = OpenStruct.new appliance_id_invalid: "#{params[:license][:appliance_id]} is not a valid Appliance ID"
       @errors = Hash[:error, OpenStruct.new(acronym: error)]
     end
   end

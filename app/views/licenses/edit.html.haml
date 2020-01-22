@@ -1,8 +1,8 @@
-- @title = "Create New License"
+- @title = "Update License"
 %h1{:style => "padding: 10px;"}
-  New License
-= form_for :license, url: {action: "create"}, html: {id: 'license_form'} do |f|
+  Update License
+= form_for :license, url: {action: "update"}, html: {method: :put} do |f|
   = render partial: 'form', locals: { f: f }
   %p{:style => "padding: 10px;"}
     = f.submit "Cancel", name: 'cancel', id: 'cancel', formnovalidate: 'formnovalidate'
-    = f.submit "Create License", class: "blueButton"
+    = f.submit "Update License", class: "blueButton"
