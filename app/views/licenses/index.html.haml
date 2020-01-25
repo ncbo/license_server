@@ -1,6 +1,6 @@
-- @title = "My Licenses"
+- @title = "Licenses"
 
-%h1.tab_header My Licenses
+%h1.tab_header Licenses
 %p.tab_description
   Below is a list of your current appliance licenses
 
@@ -16,23 +16,36 @@
     %thead
       %tr
         %th Appliance ID
+        - if current_user_admin?
+          %th OP Username
+          %th Name
+        %th Project Info
+        %th Reason
         %th License Key
         %th Expires
         %th Status
+      - if current_user_admin?
+        %th Actions
     %tbody
       - for license in @licenses
         %tr
-          %td{:style => "vertical-align:top;", :width => "30%"}
+          %td
             %strong= link_to(license.appliance_id, license_path(license.id))
             %br/
             %span{:style => "font-size:75%; vertical-align:bottom;"}
-              = link_to("Edit", edit_license_path(license.id))
               - if current_user_admin?
+                = link_to("Edit", edit_license_path(license.id))
                 &nbsp;&nbsp;
                 = link_to("Delete (admin only)", license_path(license.id), :method => :delete, :confirm => "Are you sure?")
-          %td{:style => "vertical-align:top;", :width => "50%"}
+          %td
+            = license.project_info
+          %td
+            = license.reason
+          %td
             = license.license_key
-          %td{:style => "vertical-align:top;", :width => "10%"}
+          %td
             = license.valid_date
           %td
             = license.approval_status.humanize
+        - if current_user_admin?
+          %td Actions

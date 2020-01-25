@@ -5,7 +5,7 @@ class CreateLicenses < ActiveRecord::Migration[5.1]
       t.string :bp_username, null: false
       t.string :last_name, null: false
       t.string :first_name, null: false
-      t.string :organization, limit: 512, null: false
+      t.string :organization, limit: 512
       t.text :project_info
       t.text :reason
       t.text :identification

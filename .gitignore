@@ -28,7 +28,7 @@ config/deploy/*
 /public/assets/
 
 keys/private.pem
-
+data
 .ruby-version
 
 # Ignore editor files

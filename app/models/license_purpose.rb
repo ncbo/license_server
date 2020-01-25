@@ -1,3 +1,3 @@
 class LicensePurpose < ApplicationRecord
-  belongs_to :license
+  has_many :licenses
 end

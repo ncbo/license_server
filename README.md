@@ -9,25 +9,16 @@ Verifying - Enter pass phrase for private.pem:
 % openssl rsa -in private.pem -out public.pem -outform PEM -pubout
 ```
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Creating and initializing database
+```
+% rails db:create
+% rails db:migrate
+% rails db:seed
+```
 
-Things you may want to cover:
+## Removing database
+```
+% rails db:migrate VERSION=0
+% rails db:drop
+```
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
