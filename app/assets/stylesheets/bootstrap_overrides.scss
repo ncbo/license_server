@@ -1,4 +1,4 @@
-/* Sticky footer styles from Bootstrap: 
+/* Sticky footer styles from Bootstrap:
    https://getbootstrap.com/docs/4.1/examples/sticky-footer/sticky-footer.css
 -------------------------------------------------- */
 html {
@@ -9,14 +9,14 @@ body {
   margin-bottom: body_margin_bottom(); /* Margin bottom by footer height */
 }
 .footer {
-  position: absolute;
+  position: relative;
   bottom: 0;
   width: 100%;
   color: #757575;
   background-color: #ccc;
 }
 
-/* Footer 
+/* Footer
 -------------------------------------------------- */
 footer.footer h6 {
   font-weight: bold;
@@ -28,8 +28,8 @@ footer.footer .list-inline-item:not(:last-child) {
 
 @media only screen and (max-width: 992px) {
   body {
-    margin-bottom: 350px; 
-  }  
+    margin-bottom: 350px;
+  }
   .footer {
     height: 350px;
   }
@@ -51,12 +51,4 @@ footer.footer .list-inline-item:not(:last-child) {
   .footer {
     height: 625px;
   }
-}
-
-/* Customized styles for appliance mode
--------------------------------------------------- */
-.footer-appliance {
-  height: 60px; /* Set the fixed height of the footer here */
-  background-color: #f5f5f5;
-  padding: 20px 0;
 }

@@ -8,13 +8,38 @@ class LicensesController < ApplicationController
   before_action :init_license_purposes
 
   def index
+
+
+
+private_key = File.read($PRIVATE_KEY_FILE)
+public_key  = File.read($PUBLIC_KEY_FILE)
+
+d = Date.today >> 12
+
+string = "#{SecureRandom.uuid};#{d}"
+encrypted_string = EncryptionUtil.encrypt(private_key, string)
+puts "************"
+puts encrypted_string
+puts "************"
+puts
+
+
+decrypted_string = EncryptionUtil.decrypt(public_key, encrypted_string)
+puts "************"
+puts decrypted_string
+puts "************"
+
+
+
+
+
     if session[:user].nil?
       redirect_to :controller => 'login', :action => 'index'
     else
       if helpers.current_user_admin?
-        @licenses = License.order(:valid_date)
+        @licenses = License.order('approval_status DESC, valid_date')
       else
-        @licenses = License.order(:valid_date).where(bp_username: session[:user].username)
+        @licenses = License.order('approval_status DESC, valid_date').where(bp_username: session[:user].username)
       end
       render action: "index"
     end

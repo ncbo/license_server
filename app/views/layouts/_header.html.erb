@@ -12,14 +12,18 @@
 	<link href='//fonts.googleapis.com/css?family=Droid+Sans:400' rel='stylesheet' type='text/css'>
 
 	<!-- CSS -->
+  <%= stylesheet_link_tag "//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" %>
 	<%= stylesheet_link_tag "application" %>
 
   <!-- JavaScript -->
   <%= javascript_include_tag "vendor" %>
+  <%= javascript_include_tag "//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" %>
 
+  <script>
+    $(document).data({user: <%= (session[:user] || {}).to_hash.to_json.html_safe %>});
+  </script>
 </head>
 <body class="<%= controller_name %> <%= action_name %>">
-
   <%=render partial: 'layouts/topnav'%>
 
   <div class="container-fluid">

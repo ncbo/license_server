@@ -1,7 +1,6 @@
 require 'openssl'
 require 'base64'
 
-
 #private_key = File.read($PRIVATE_KEY_FILE)
 #public_key  = File.read($PUBLIC_KEY_FILE)
 #
@@ -19,8 +18,6 @@ require 'base64'
 #puts "************"
 #puts decrypted_string
 #puts "************"
-#
-#puts helpers.current_user_admin?
 
 
 
@@ -38,7 +35,7 @@ module EncryptionUtil
 
     # Return the raw string after decryption & decoding
     def decrypt(key, string)
-      encrypted_key, crypt = string.split("|").map{|a| Base64.decode64(a) }
+      encrypted_key, crypt = string.split("|").map{ |a| Base64.decode64(a) }
       aes_key = rsa_key(key).public_decrypt(encrypted_key)
       aes_decrypt = OpenSSL::Cipher.new('AES-256-CBC').decrypt
       aes_decrypt.key = aes_key
@@ -48,7 +45,7 @@ module EncryptionUtil
     private
 
     def rsa_key(key)
-      OpenSSL::PKey::RSA.new(key, $PRIVATE_PASSPHRASE)
+      OpenSSL::PKey::RSA.new(key)
     end
   end
 end

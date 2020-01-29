@@ -4,5 +4,5 @@ class License < ApplicationRecord
       disapproved: "disapproved",
       pending: "pending"
   }
-  has_one :license_purpose
+  belongs_to :license_purpose
 end

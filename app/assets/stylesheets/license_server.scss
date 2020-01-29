@@ -36,9 +36,6 @@
   color: lightGray !important;
 }
 
-
-
-
 .navbar-header {
   padding-left: 15px;
   padding-right: 15px;
@@ -52,6 +49,65 @@
   box-shadow:0 3px 5px #999;
   width: 100%;
 }
+
+
+
+
+
+
+
+.licenses_list_container {
+  //width: 90%;
+  padding: 1em;
+}
+
+/* Datatables */
+.licenses_list_container {
+  clear: both;
+}
+
+.licenses_list_container .dataTables_length {
+  float: left;
+  padding: 1em 0;
+}
+
+.licenses_list_container .dataTables_filter {
+  float: right;
+  padding-top: 3px;
+}
+
+.licenses_list_container .dataTables_filter input {
+  width: 200px;
+}
+
+.licenses_list_container .dataTables_info {
+  text-align: center;
+  padding: .5em;
+}
+
+.licenses_list_container .dataTables_paginate {
+  text-align: center;
+}
+
+.licenses_list_container .dataTables_paginate .paginate_button {
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0 .5em;
+}
+
+.licenses_list_container .dataTables_paginate .paginate_button:hover {
+  text-decoration: none;
+}
+
+.licenses_list_container .first, .licenses_list_container .previous, .licenses_list_container .next, .licenses_list_container .last {
+  padding: 0 .5em;
+}
+
+
+
+
+
+
 
 .container-fluid {
   margin-right: auto;
