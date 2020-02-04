@@ -3,6 +3,10 @@ class LicenseServerController < ApplicationController
   layout 'main'
 
   def index
-    render action: "index"
+    if helpers.logged_in?
+      redirect_to licenses_path
+    else
+      render action: "index"
+    end
   end
 end

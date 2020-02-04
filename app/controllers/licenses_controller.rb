@@ -9,31 +9,6 @@ class LicensesController < ApplicationController
   before_action :init_license_purposes
 
   def index
-
-
-
-#private_key = File.read($PRIVATE_KEY_FILE)
-#public_key  = File.read($PUBLIC_KEY_FILE)
-#
-#d = Date.today >> 12
-#
-#string = "#{SecureRandom.uuid};#{d}"
-#encrypted_string = EncryptionUtil.encrypt(private_key, string)
-#puts "************"
-#puts encrypted_string
-#puts "************"
-#puts
-#
-#
-#decrypted_string = EncryptionUtil.decrypt(public_key, encrypted_string)
-#puts "************"
-#puts decrypted_string
-#puts "************"
-
-
-
-
-
     if session[:user].nil?
       redirect_to :controller => 'login', :action => 'index'
     else
@@ -81,11 +56,25 @@ class LicensesController < ApplicationController
 
 
   def approve
-    update_status(params[:id], :approved)
+    license = License.find(params[:id])
+    license.approval_status = License.approval_statuses[:approved]
+    valid_date = Date.today + $LICENSE_VALIDITY_MONTHS.months
+    license.valid_date = valid_date
+    private_key = File.read($PRIVATE_KEY_FILE)
+    raw_data = "#{license.appliance_id};#{license.organization};#{valid_date}"
+    lic_key = EncryptionUtil.encrypt(private_key, raw_data)
+    license.license_key = lic_key
+    license.save
+
+    redirect_to licenses_path
   end
 
   def disapprove
-    update_status(params[:id], :disapproved)
+    license = License.find(params[:id])
+    license.approval_status = License.approval_statuses[:disapproved]
+    license.valid_date = nil
+    license.license_key = nil
+    license.save
   end
 
   def renew
@@ -97,6 +86,7 @@ class LicensesController < ApplicationController
 
   def edit
     @license = License.find(params[:id])
+    render action: :edit
   end
 
   def create
@@ -107,19 +97,15 @@ class LicensesController < ApplicationController
     if @errors
       render action: :new
     else
-
       if @license.valid?
         @license.bp_username = session[:user].username
-        @license.valid_date = Date.today + $LICENSE_VALIDITY_MONTHS.months
         @license.save
         redirect_to licenses_path
       else
         @errors = response_errors(@license.errors)
         render action: "new"
       end
-
     end
-
   end
 
   def update
@@ -131,13 +117,6 @@ class LicensesController < ApplicationController
   end
 
   private
-
-  def update_status(id, status)
-    license = License.find(id)
-    license.approval_status = License.approval_statuses[status]
-    license.save
-    redirect_to licenses_path
-  end
 
   def check_for_cancel
     if params[:cancel] == "Cancel"

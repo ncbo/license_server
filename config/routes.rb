@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     post :approve, on: :member
     post :disapprove, on: :member
     post :renew, on: :member
+    get :renew, on: :member
   end
 
   # User

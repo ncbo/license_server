@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 20200121230018) do
     t.text "comments"
     t.string "appliance_id", null: false
     t.string "license_key", limit: 1024
-    t.date "valid_date", null: false
+    t.date "valid_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "approval_status", limit: 11, default: "pending", null: false

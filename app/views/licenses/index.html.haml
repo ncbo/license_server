@@ -7,7 +7,7 @@
     Below is a list of your current appliance licenses
 
   %span
-    = button_to "Create New License", new_license_path, :method => :get
+    = button_to "Create License for New OA", new_license_path, :method => :get
   %br/
   %table#licenses.zebra{:cellpadding => "0", :cellspacing => "0", "data-turbolinks" => "false"}
     %thead
@@ -61,7 +61,7 @@
           %td
             = license.approval_status.humanize
           %td
-            = button_to "Renew", renew_license_path(license.id), :method => :post
+            = button_to "Renew", renew_license_path(license.id), method: :post, id: 'renew_button', form: { id: 'renew_form' }
             - if current_user_admin?
-              = button_to "Approve", approve_license_path(license.id), :method => :post
-              = button_to "Disapprove", disapprove_license_path(license.id), :method => :post
+              = button_to "Approve", approve_license_path(license.id), method: :post, id: 'approve_button', form: { id: 'approve_form' }, data: { confirm: "Are you sure you want to approve license #{license.id}, generate the licence key and notify the user?" }
+              = button_to "Disapprove", disapprove_license_path(license.id), method: :post, id: 'disapprove_button', form: { id: 'disapprove_form' }, data: { confirm: "Are you sure you want to disapprove license #{license.id}?" }

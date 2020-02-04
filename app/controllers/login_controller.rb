@@ -3,6 +3,10 @@ class LoginController < ApplicationController
   layout 'main'
 
   def index
+    if helpers.logged_in?
+      redirect_to licenses_path
+    end
+
     # Sets the redirect properties
     if params[:redirect]
       # Get the original, encoded redirect
@@ -61,7 +65,7 @@ class LoginController < ApplicationController
   def destroy
     session[:user] = nil
     flash[:notice] = "Logged out"
-    redirect_to request.referer || "/"
+    redirect_to root_path
   end
 
   private

@@ -1,10 +1,12 @@
 %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom
   = link_to(image_tag("logos/bioportal-logo.png"), root_path(), class: "navbar-brand")
+  = button_tag(type: "button", class: "navbar-toggler", data: {toggle: "collapse", target: "#topNavigationToggler"}, aria: {controls: "topNavigationToggler", expanded: "false", label: "Toggle navigation"}) do
+    %span.navbar-toggler-icon
 
   %div#topNavigationToggler.navbar-collapse.collapse.justify-content-between
     %ul.navbar-nav
     %ul.navbar-nav
-      - if session[:user].nil?
+      - unless logged_in?
         %li.nav-item
           = link_to("Login", login_index_path(redirect: request.original_url), class: "btn btn-bp-login mr-md-2")
       - else
