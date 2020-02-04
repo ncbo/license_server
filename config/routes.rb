@@ -4,11 +4,14 @@ Rails.application.routes.draw do
 
   resources :license_server
   resources :login
-  resources :licenses
+
+  resources :licenses do
+    post :approve, on: :member
+    post :disapprove, on: :member
+    post :renew, on: :member
+  end
 
   # User
   get '/logout' => 'login#destroy', :as => :logout
   get '/login_as/:login_as' => 'login#login_as'
-
-
 end

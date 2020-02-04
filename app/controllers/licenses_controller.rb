@@ -3,6 +3,7 @@ require 'base64'
 require 'uuid'
 
 class LicensesController < ApplicationController
+  skip_before_action :verify_authenticity_token
   layout 'main'
   before_action :check_for_cancel, :only => [:create, :update]
   before_action :init_license_purposes
@@ -11,23 +12,23 @@ class LicensesController < ApplicationController
 
 
 
-private_key = File.read($PRIVATE_KEY_FILE)
-public_key  = File.read($PUBLIC_KEY_FILE)
-
-d = Date.today >> 12
-
-string = "#{SecureRandom.uuid};#{d}"
-encrypted_string = EncryptionUtil.encrypt(private_key, string)
-puts "************"
-puts encrypted_string
-puts "************"
-puts
-
-
-decrypted_string = EncryptionUtil.decrypt(public_key, encrypted_string)
-puts "************"
-puts decrypted_string
-puts "************"
+#private_key = File.read($PRIVATE_KEY_FILE)
+#public_key  = File.read($PUBLIC_KEY_FILE)
+#
+#d = Date.today >> 12
+#
+#string = "#{SecureRandom.uuid};#{d}"
+#encrypted_string = EncryptionUtil.encrypt(private_key, string)
+#puts "************"
+#puts encrypted_string
+#puts "************"
+#puts
+#
+#
+#decrypted_string = EncryptionUtil.decrypt(public_key, encrypted_string)
+#puts "************"
+#puts decrypted_string
+#puts "************"
 
 
 
@@ -36,11 +37,24 @@ puts "************"
     if session[:user].nil?
       redirect_to :controller => 'login', :action => 'index'
     else
+      lic_arr = nil
+      lic_hash = {}
+
       if helpers.current_user_admin?
-        @licenses = License.order('approval_status DESC, valid_date')
+        lic_arr = License.order('approval_status DESC, valid_date')
       else
-        @licenses = License.order('approval_status DESC, valid_date').where(bp_username: session[:user].username)
+        lic_arr = License.order('approval_status DESC, valid_date').where(bp_username: session[:user].username)
       end
+
+      lic_arr.each do |lic|
+        if lic_hash[lic.appliance_id]
+          lic_hash[lic.appliance_id] << lic
+        else
+          lic_hash[lic.appliance_id] = [lic]
+        end
+      end
+
+      @licenses = lic_hash.values.flatten
       render action: "index"
     end
   end
@@ -65,6 +79,22 @@ puts "************"
 
   end
 
+
+  def approve
+    update_status(params[:id], :approved)
+  end
+
+  def disapprove
+    update_status(params[:id], :disapproved)
+  end
+
+  def renew
+    license = License.find(params[:id])
+    license.id = nil
+    @license = license
+    render action: :new
+  end
+
   def edit
     @license = License.find(params[:id])
   end
@@ -75,7 +105,7 @@ puts "************"
     validate
 
     if @errors
-      render action: "new"
+      render action: :new
     else
 
       if @license.valid?
@@ -96,7 +126,18 @@ puts "************"
     binding.pry
   end
 
+  def destroy
+
+  end
+
   private
+
+  def update_status(id, status)
+    license = License.find(id)
+    license.approval_status = License.approval_statuses[status]
+    license.save
+    redirect_to licenses_path
+  end
 
   def check_for_cancel
     if params[:cancel] == "Cancel"
@@ -109,7 +150,8 @@ puts "************"
   end
 
   def validate
-    uid_valid = params[:license][:appliance_id] === $LEGACY_APPLIANCE_ID || UUID.validate(params[:license][:appliance_id])
+    re = Regexp.new("^#{$LEGACY_APPLIANCE_ID}-[0-9a-z]+$").freeze
+    uid_valid = re.match?(params[:license][:appliance_id]) || UUID.validate(params[:license][:appliance_id])
 
     unless uid_valid
       error = OpenStruct.new appliance_id_invalid: "#{params[:license][:appliance_id]} is not a valid Appliance ID"

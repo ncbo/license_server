@@ -7,14 +7,12 @@
     Below is a list of your current appliance licenses
 
   %span
-    - if session[:user].nil?
-      = button_to "Create New License", "/login", :method => :get
-    - else
-      = button_to "Create New License", new_license_path, :method => :get
+    = button_to "Create New License", new_license_path, :method => :get
   %br/
-  %table#licenses.zebra{:cellpadding => "0", :cellspacing => "0"}
+  %table#licenses.zebra{:cellpadding => "0", :cellspacing => "0", "data-turbolinks" => "false"}
     %thead
       %tr
+        %th ID
         %th Appliance ID
         - if current_user_admin?
           %th OP Username
@@ -27,11 +25,12 @@
         %th Created
         %th Expires
         %th Status
-        - if current_user_admin?
-          %th Actions
+        %th Actions
     %tbody
       - for license in @licenses
         %tr
+          %td
+            = license.id
           %td
             %strong= link_to(license.appliance_id[0..7], license_path(license.id))
             %br/
@@ -61,5 +60,8 @@
             = license.valid_date
           %td
             = license.approval_status.humanize
+          %td
+            = button_to "Renew", renew_license_path(license.id), :method => :post
             - if current_user_admin?
-              %td Actions
+              = button_to "Approve", approve_license_path(license.id), :method => :post
+              = button_to "Disapprove", disapprove_license_path(license.id), :method => :post
