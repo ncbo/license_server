@@ -30,7 +30,7 @@ class LicensesController < ApplicationController
       end
 
       @licenses = lic_hash.values.flatten
-      render action: "index"
+      render action: :index
     end
   end
 
@@ -47,13 +47,6 @@ class LicensesController < ApplicationController
       end
     end
   end
-
-
-  def show
-
-
-  end
-
 
   def approve
     license = License.find(params[:id])
@@ -90,12 +83,28 @@ class LicensesController < ApplicationController
   end
 
   def create
+    save_license_from_params(:new)
+  end
+
+  def update
+    save_license_from_params(:edit)
+  end
+
+  def destroy
+    license = License.find(params[:id])
+    license.destroy!
+    redirect_to licenses_path
+  end
+
+  private
+
+  def save_license_from_params(action)
     params[:license].permit!
     @license = License.new(params[:license])
     validate
 
     if @errors
-      render action: :new
+      render action: action
     else
       if @license.valid?
         @license.bp_username = session[:user].username
@@ -103,20 +112,10 @@ class LicensesController < ApplicationController
         redirect_to licenses_path
       else
         @errors = response_errors(@license.errors)
-        render action: "new"
+        render action: action
       end
     end
   end
-
-  def update
-    binding.pry
-  end
-
-  def destroy
-
-  end
-
-  private
 
   def check_for_cancel
     if params[:cancel] == "Cancel"

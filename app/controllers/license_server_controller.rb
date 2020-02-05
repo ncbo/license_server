@@ -6,7 +6,7 @@ class LicenseServerController < ApplicationController
     if helpers.logged_in?
       redirect_to licenses_path
     else
-      render action: "index"
+      render action: :index
     end
   end
 end

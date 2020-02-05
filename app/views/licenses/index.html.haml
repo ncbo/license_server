@@ -1,6 +1,4 @@
 - @title = "Licenses"
-
-
 %h1.tab_header Licenses
 .licenses_list_container
   %p.tab_description
@@ -32,13 +30,13 @@
           %td
             = license.id
           %td
-            %strong= link_to(license.appliance_id[0..7], license_path(license.id))
+            %strong= license.appliance_id[0..7]
             %br/
             %span{:style => "font-size:75%; vertical-align:bottom;"}
               - if current_user_admin?
                 = link_to("Edit", edit_license_path(license.id))
                 &nbsp;&nbsp;
-                = link_to("Delete", license_path(license.id), :method => :delete, :confirm => "Are you sure?")
+                = link_to "Delete", license_path(license.id), method: :delete, data: { confirm: "Are you sure you want to completely destroy the license with ID: #{license.id}?" }
           - if current_user_admin?
             %td
               = license.bp_username
@@ -63,5 +61,5 @@
           %td
             = button_to "Renew", renew_license_path(license.id), method: :post, id: 'renew_button', form: { id: 'renew_form' }
             - if current_user_admin?
-              = button_to "Approve", approve_license_path(license.id), method: :post, id: 'approve_button', form: { id: 'approve_form' }, data: { confirm: "Are you sure you want to approve license #{license.id}, generate the licence key and notify the user?" }
-              = button_to "Disapprove", disapprove_license_path(license.id), method: :post, id: 'disapprove_button', form: { id: 'disapprove_form' }, data: { confirm: "Are you sure you want to disapprove license #{license.id}?" }
+              = button_to "Approve", approve_license_path(license.id), method: :post, id: 'approve_button', form: { id: 'approve_form' }, data: { confirm: "Are you sure you want to approve the license with ID: #{license.id}, generate the licence key and notify the user?" }
+              = button_to "Disapprove", disapprove_license_path(license.id), method: :post, id: 'disapprove_button', form: { id: 'disapprove_form' }, data: { confirm: "Are you sure you want to disapprove the license with ID: #{license.id}?" }

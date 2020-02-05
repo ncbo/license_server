@@ -31,6 +31,10 @@
   }
 %div{:style => "padding:10px"}
   %table.form
+    - if @license.id
+      %tr
+        %th License ID:
+        %td.top= @license.id
     %tr
       %th Appliance ID: *
       %td.top= text_field :license, :appliance_id, value: @license.appliance_id, required: true, oninvalid: "this.setCustomValidity('Please enter a valid Appliance ID')", oninput: "this.setCustomValidity('')", class: "required"
