@@ -74,6 +74,11 @@ class LicensesController < ApplicationController
 
   def create
     save_license_from_params(:new)
+
+    if @license.approval_status === License.approval_statuses[:approved]
+      params[:id] = @license.id
+      approve
+    end
   end
 
   def update
@@ -83,6 +88,7 @@ class LicensesController < ApplicationController
   def destroy
     license = License.find(params[:id])
     license.destroy!
+    flash[:success] = "License with ID: #{params[:id]} has been deleted."
     redirect_to licenses_path
   end
 
