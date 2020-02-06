@@ -383,3 +383,27 @@ textarea.req {
   color: #888;
 }
 
+/* message boxes */
+.alert-box {
+  color: #555;
+  border-radius: 5px;
+  font-family: Tahoma, Geneva, Arial, sans-serif;
+  font-size: 11px;
+  padding: 10px 11px 10px 36px;
+  margin-bottom: 30px;
+}
+
+.alert-box span {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.error {
+  background: #ffecec asset-data-url("error.png") no-repeat 10px 50%;
+  border: 1px solid #f5aca6;
+}
+
+.success {
+  background: #e9ffd9 asset-data-url("success.png") no-repeat 10px 50%;
+  border: 1px solid #a6ca8a;
+}

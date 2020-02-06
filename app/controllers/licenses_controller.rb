@@ -12,24 +12,7 @@ class LicensesController < ApplicationController
     if session[:user].nil?
       redirect_to :controller => 'login', :action => 'index'
     else
-      lic_arr = nil
-      lic_hash = {}
-
-      if helpers.current_user_admin?
-        lic_arr = License.order('approval_status DESC, valid_date')
-      else
-        lic_arr = License.order('approval_status DESC, valid_date').where(bp_username: session[:user].username)
-      end
-
-      lic_arr.each do |lic|
-        if lic_hash[lic.appliance_id]
-          lic_hash[lic.appliance_id] << lic
-        else
-          lic_hash[lic.appliance_id] = [lic]
-        end
-      end
-
-      @licenses = lic_hash.values.flatten
+      render_licenses
       render action: :index
     end
   end
@@ -51,14 +34,19 @@ class LicensesController < ApplicationController
   def approve
     license = License.find(params[:id])
     license.approval_status = License.approval_statuses[:approved]
-    valid_date = Date.today + $LICENSE_VALIDITY_MONTHS.months
-    license.valid_date = valid_date
-    private_key = File.read($PRIVATE_KEY_FILE)
-    raw_data = "#{license.appliance_id};#{license.organization};#{valid_date}"
-    lic_key = EncryptionUtil.encrypt(private_key, raw_data)
-    license.license_key = lic_key
-    license.save
 
+    # generate valid date and license key only the first time
+    if license.valid_date.nil? || license.license_key.nil?
+      valid_date = Date.today + $LICENSE_VALIDITY_MONTHS.months
+      license.valid_date = valid_date
+      private_key = File.read($PRIVATE_KEY_FILE)
+      raw_data = "#{license.appliance_id};#{license.organization};#{valid_date}"
+      lic_key = EncryptionUtil.encrypt(private_key, raw_data)
+      license.license_key = lic_key
+    end
+
+    license.save
+    flash[:success] = "License with ID: #{license.id} has been approved."
     redirect_to licenses_path
   end
 
@@ -68,6 +56,8 @@ class LicensesController < ApplicationController
     license.valid_date = nil
     license.license_key = nil
     license.save
+    flash[:success] = "License with ID: #{license.id} has been disapproved."
+    redirect_to licenses_path
   end
 
   def renew
@@ -98,17 +88,51 @@ class LicensesController < ApplicationController
 
   private
 
+  def render_licenses
+    lic_arr = nil
+    lic_hash = {}
+
+    if helpers.current_user_admin?
+      lic_arr = License.order('approval_status DESC, valid_date')
+    else
+      lic_arr = License.order('approval_status DESC, valid_date').where(bp_username: session[:user].username)
+    end
+
+    lic_arr.each do |lic|
+      if lic_hash[lic.appliance_id]
+        lic_hash[lic.appliance_id] << lic
+      else
+        lic_hash[lic.appliance_id] = [lic]
+      end
+    end
+
+    @licenses = lic_hash.values.flatten
+  end
+
   def save_license_from_params(action)
     params[:license].permit!
-    @license = License.new(params[:license])
+
+    if params[:id]
+      @license = License.find(params[:id])
+    else
+      @license = License.new
+    end
+
+    @license.bp_username = session[:user].username
+    @license.assign_attributes(params[:license])
     validate
 
     if @errors
       render action: action
     else
       if @license.valid?
-        @license.bp_username = session[:user].username
         @license.save
+
+        if action === :new
+          flash[:success] = "New license with ID: #{@license.id} has been successfully created."
+        else
+          flash[:success] = "License with ID: #{@license.id} has been successfully updated."
+        end
         redirect_to licenses_path
       else
         @errors = response_errors(@license.errors)
@@ -133,7 +157,7 @@ class LicensesController < ApplicationController
 
     unless uid_valid
       error = OpenStruct.new appliance_id_invalid: "#{params[:license][:appliance_id]} is not a valid Appliance ID"
-      @errors = Hash[:error, OpenStruct.new(acronym: error)]
+      @errors = Hash[:error, OpenStruct.new(appliance_id: error)]
     end
   end
 
