@@ -17,6 +17,11 @@ class LicensesController < ApplicationController
     end
   end
 
+  def show
+    @license = License.find(params[:id])
+    render action: :show
+  end
+
   def new
     if session[:user].nil?
       redirect_to :controller => 'login', :action => 'index'
@@ -32,21 +37,8 @@ class LicensesController < ApplicationController
   end
 
   def approve
-    license = License.find(params[:id])
-    license.approval_status = License.approval_statuses[:approved]
-
-    # generate valid date and license key only the first time
-    if license.valid_date.nil? || license.license_key.nil?
-      valid_date = Date.today + $LICENSE_VALIDITY_MONTHS.months
-      license.valid_date = valid_date
-      private_key = File.read($PRIVATE_KEY_FILE)
-      raw_data = "#{license.appliance_id};#{license.organization};#{valid_date}"
-      lic_key = EncryptionUtil.encrypt(private_key, raw_data)
-      license.license_key = lic_key
-    end
-
-    license.save
-    flash[:success] = "License with ID: #{license.id} has been approved."
+    approve_license(params[:id])
+    flash[:success] = "License with ID: #{params[:id]} has been approved."
     redirect_to licenses_path
   end
 
@@ -73,16 +65,33 @@ class LicensesController < ApplicationController
   end
 
   def create
-    save_license_from_params(:new)
+    save_license_from_params
 
-    if @license.approval_status === License.approval_statuses[:approved]
-      params[:id] = @license.id
-      approve
+    if @errors
+      render action: :new if @errors
+    else
+      success = "New license with ID: #{@license.id} has been successfully created."
+
+      if @license.approval_status === License.approval_statuses[:approved]
+        params[:id] = @license.id
+        approve_license(@license.id)
+        success << " A license key has been generated."
+      end
+
+      flash[:success] = success
+      redirect_to licenses_path
     end
   end
 
   def update
-    save_license_from_params(:edit)
+    save_license_from_params
+
+    if @errors
+      render action: :new if @errors
+    else
+      flash[:success] = "License with ID: #{@license.id} has been successfully updated."
+      redirect_to licenses_path
+    end
   end
 
   def destroy
@@ -115,7 +124,24 @@ class LicensesController < ApplicationController
     @licenses = lic_hash.values.flatten
   end
 
-  def save_license_from_params(action)
+  def approve_license(id)
+    license = License.find(id)
+    license.approval_status = License.approval_statuses[:approved]
+
+    # generate valid date and license key only the first time
+    if license.valid_date.nil? || license.license_key.nil?
+      valid_date = Date.today + $LICENSE_VALIDITY_MONTHS.months
+      license.valid_date = valid_date
+      private_key = File.read($PRIVATE_KEY_FILE)
+      raw_data = "#{license.appliance_id};#{license.organization};#{valid_date}"
+      lic_key = EncryptionUtil.encrypt(private_key, raw_data)
+      license.license_key = lic_key
+    end
+
+    license.save
+  end
+
+  def save_license_from_params()
     params[:license].permit!
 
     if params[:id]
@@ -128,21 +154,11 @@ class LicensesController < ApplicationController
     @license.assign_attributes(params[:license])
     validate
 
-    if @errors
-      render action: action
-    else
+    unless @errors
       if @license.valid?
         @license.save
-
-        if action === :new
-          flash[:success] = "New license with ID: #{@license.id} has been successfully created."
-        else
-          flash[:success] = "License with ID: #{@license.id} has been successfully updated."
-        end
-        redirect_to licenses_path
       else
         @errors = response_errors(@license.errors)
-        render action: action
       end
     end
   end

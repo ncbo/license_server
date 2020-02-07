@@ -1,0 +1,50 @@
+%div{:style => "padding:10px"}
+  %table.form
+    - if current_user_admin?
+      %tr
+        %th License&nbsp;ID:
+        %td.top= @license.id
+    %tr
+      %th Created&nbsp;On:
+      %td.top= @license.created_at
+    %tr
+      %th Appliance&nbsp;ID:
+      %td.top= @license.appliance_id
+    %tr
+      %th Name:
+      %td.top= "#{@license.first_name} #{@license.last_name}"
+    %tr
+      %th Organization:
+      %td.top= @license.organization
+    %tr
+      %th Project&nbsp;Purpose:
+      %td.top= @license.license_purpose.name
+    %tr
+      %th Approval&nbsp;Status:
+      %td.top
+        - if !current_user_admin? && @license.approval_status === License.approval_statuses[:disapproved]
+          :plain
+              Please email us at <a href='mailto:#{$SUPPORT_EMAIL}'>#{$SUPPORT_EMAIL}</a> for further instructions on getting your license key.
+        - else
+          = @license.approval_status.humanize
+    %tr
+      %th Project&nbsp;Information:
+      %td.top= @license.project_info
+    %tr
+      %th Reason&nbsp;for&nbsp;Needing&nbsp;Appliance:
+      %td.top= @license.reason
+    %tr
+      %th License&nbsp;Key
+      %td.top= @license.license_key
+    %tr
+      %th Expires&nbsp;After
+      %td.top= @license.valid_date
+    - if current_user_admin?
+      %tr
+        %th Identification:
+        %td.top= @license.identification
+      %tr
+        %th Admin&nbsp;Comments:
+        %td.top= @license.comments
+  %br
+  = link_to 'Back to Licenses', :back

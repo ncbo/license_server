@@ -12,38 +12,38 @@
 %table#licenses.zebra{:cellpadding => "0", :cellspacing => "0", "data-turbolinks" => "false"}
   %thead
     %tr
-      %th ID
-      %th Appliance ID
       - if current_user_admin?
-        %th OP Username
+        %th ID
+        %th Username
         %th Name
+      %th Appliance&nbsp;ID
       %th Organization
-      %th Project Info
+      %th Project&nbsp;Info
       %th Reason
       %th Purpose
-      %th License Key
+      %th License&nbsp;Key?
       %th Created
-      %th Expires
+      %th Expires&nbsp;After
       %th Status
       %th Actions
   %tbody
     - for license in @licenses
       %tr
-        %td
-          = license.id
-        %td
-          %strong= license.appliance_id[0..7]
-          %br/
-          %span{:style => "font-size:75%; vertical-align:bottom;"}
-            - if current_user_admin?
-              = link_to("Edit", edit_license_path(license.id))
-              &nbsp;&nbsp;
-              = link_to "Delete", license_path(license.id), method: :delete, data: { confirm: "Are you sure you want to completely destroy the license with ID: #{license.id}?" }
         - if current_user_admin?
+          %td
+            = license.id
           %td
             = license.bp_username
           %td
             = "#{license.first_name} #{license.last_name}"
+        %td
+          %strong= link_to(license.appliance_id[0..7], license_path(license.id))
+          %br/
+          %span{:style => "font-size:75%; vertical-align:bottom;"}
+            - if current_user_admin?
+              =  link_to("Edit", edit_license_path(license.id))
+              &nbsp;&nbsp;
+              = link_to "Delete", license_path(license.id), method: :delete, data: { confirm: "Are you sure you want to completely destroy the license with ID: #{license.id}?" }
         %td
           = license.organization
         %td
@@ -53,13 +53,20 @@
         %td
           = license.license_purpose.name
         %td
-          = license.license_key
+          - if license.license_key
+            = link_to("Show", license_path(license.id))
+          - else
+            Not&nbsp;generated
         %td
           = license.created_at
         %td
           = license.valid_date
         %td
-          = license.approval_status.humanize
+          - if !current_user_admin? && license.approval_status === License.approval_statuses[:disapproved]
+            :plain
+              Please email us at <a href='mailto:#{$SUPPORT_EMAIL}'>#{$SUPPORT_EMAIL}</a> for further instructions on getting your license key.
+          - else
+            = license.approval_status.humanize
         %td
           = button_to "Renew", renew_license_path(license.id), method: :post, id: 'renew_button', form: { id: 'renew_form' }
           - if current_user_admin?
