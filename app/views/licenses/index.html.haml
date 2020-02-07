@@ -5,7 +5,7 @@
   %div#success_message{:class => "alert-box success"}
     = flash[:success]
 %p.tab_description
-  Below is a list of your current appliance licenses
+  Below is a list of your current OntoPortal Appliance licenses:
 %span
   = button_to "Create License for New OA", new_license_path, :method => :get
 %br/
@@ -68,7 +68,7 @@
           - else
             = license.approval_status.humanize
         %td
-          = button_to "Renew", renew_license_path(license.id), method: :post, id: 'renew_button', form: { id: 'renew_form' }
+          = button_to "Renew", renew_license_path(license.id), method: :post
           - if current_user_admin?
-            = button_to "Approve", approve_license_path(license.id), method: :post, id: 'approve_button', form: { id: 'approve_form' }, data: { confirm: "Are you sure you want to approve the license with ID: #{license.id}, generate the licence key and notify the user?" }
-            = button_to "Disapprove", disapprove_license_path(license.id), method: :post, id: 'disapprove_button', form: { id: 'disapprove_form' }, data: { confirm: "Are you sure you want to disapprove the license with ID: #{license.id}?" }
+            = button_to "Approve", approve_license_path(license.id), method: :post, data: { confirm: "Are you sure you want to approve the license with ID: #{license.id}, generate the licence key and notify the user?" }
+            = button_to "Disapprove", disapprove_license_path(license.id), method: :post, data: { confirm: "Are you sure you want to disapprove the license with ID: #{license.id}?" }
