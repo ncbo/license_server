@@ -70,7 +70,7 @@ class LicensesController < ApplicationController
     if @errors
       render action: :new if @errors
     else
-      success = "New license with ID: #{@license.id} has been successfully created."
+      success = "New #{license_id_msg(@license.id)} has been successfully created."
 
       if @license.approval_status === License.approval_statuses[:approved]
         params[:id] = @license.id
@@ -181,6 +181,15 @@ class LicensesController < ApplicationController
       error = OpenStruct.new appliance_id_invalid: "#{params[:license][:appliance_id]} is not a valid Appliance ID"
       @errors = Hash[:error, OpenStruct.new(appliance_id: error)]
     end
+  end
+
+  def license_id_msg(id)
+    msg = "License"
+
+    if helpers.current_user_admin?
+      msg << " with ID: #{id}"
+    end
+    msg
   end
 
 end

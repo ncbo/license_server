@@ -12,19 +12,19 @@
 	<link href='//fonts.googleapis.com/css?family=Droid+Sans:400' rel='stylesheet' type='text/css'>
 
 	<!-- CSS -->
-  <%= stylesheet_link_tag "//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" %>
+  <%= stylesheet_link_tag "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css" %>
+  <%= stylesheet_link_tag "https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" %>
 	<%= stylesheet_link_tag "application" %>
 
   <!-- JavaScript -->
   <%= javascript_include_tag "vendor" %>
   <%= javascript_include_tag "//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" %>
-
+  <%= javascript_include_tag "https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" %>
   <script>
     $(document).data({user: <%= (session[:user] || {}).to_hash.to_json.html_safe %>});
   </script>
 </head>
 <body class="<%= controller_name %> <%= action_name %>">
   <%=render partial: 'layouts/topnav'%>
-
   <div class="container-fluid">
     <div id="bd">
