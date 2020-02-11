@@ -1,6 +1,5 @@
 - @title = "Licenses"
 %h1.tab_header Licenses
-.licenses_list_container
 - if flash[:success]
   %div#success_message{:class => "alert-box success"}
     = flash[:success]
@@ -25,7 +24,7 @@
       %th Created
       %th Expires&nbsp;After
       %th Status
-      %th Actions
+      %th.no-sort Actions
   %tbody
     - for license in @licenses
       %tr

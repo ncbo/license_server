@@ -1,6 +1,5 @@
 - @title = "Update License"
-%h1{:style => "padding: 10px;"}
-  Update License
+%h1 Update License
 = form_for :license, url: {action: "update"}, html: {method: :put} do |f|
   = render partial: 'form', locals: { f: f }
   %p{:style => "padding: 10px;"}

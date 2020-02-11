@@ -7,7 +7,12 @@ $(document).ready(function () {
 
 function renderTable() {
   var licTable = $('#licenses').dataTable({
-    "order": []
+    "order": [],
+    columnDefs: [{
+      targets: 'no-sort',
+      orderable: false,
+      searchable: false
+    }]
   });
 }
 

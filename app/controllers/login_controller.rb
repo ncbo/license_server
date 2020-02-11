@@ -21,7 +21,8 @@ class LoginController < ApplicationController
   # logs in a user
   def create
     @errors = validate(params[:user])
-    if @errors.size < 1
+
+    if @errors[:error].to_h.empty?
       logged_in_user = LinkedData::Client::Models::User.authenticate(params[:user][:username], params[:user][:password])
 
       if logged_in_user && !logged_in_user.errors
@@ -34,7 +35,8 @@ class LoginController < ApplicationController
 
         redirect_to redirect
       else
-        @errors << "Invalid account name/password combination"
+        error = OpenStruct.new login_invalid: "Invalid account name/password combination"
+        @errors = Hash[:error, OpenStruct.new(user_username: error)]
         render :action => 'index'
       end
     else
@@ -77,17 +79,20 @@ class LoginController < ApplicationController
   end
 
   def validate(params)
-    errors=[]
+    errors = {}
+    err_hash = OpenStruct.new
 
-    if params[:username].nil? || params[:username].length <1
-      errors << "Please enter an account name"
-    end
-    if params[:password].nil? || params[:password].length <1
-      errors << "Please enter a password"
+    if params[:username].nil? || params[:username].length < 1
+      error = OpenStruct.new username_invalid: "Please enter a valid username"
+      err_hash[:user_username] = error
     end
 
-    return errors
+    if params[:password].nil? || params[:password].length < 1
+      error = OpenStruct.new password_invalid: "Please enter a password"
+      err_hash[:user_password] = error
+    end
+
+    errors[:error] = err_hash unless err_hash.empty?
+    errors
   end
-
-
 end

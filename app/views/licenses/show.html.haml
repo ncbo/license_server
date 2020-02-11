@@ -1,7 +1,7 @@
 - @title = "Licence Detail"
 %h1.tab_header Licence Detail
 
-%div{:style => "padding:10px"}
+%div{:style => "padding:10px 0 0 0"}
   %table.detail
     - if current_user_admin?
       %tr
@@ -46,9 +46,6 @@
             %span#copy-button-text Copy
         - else
           Not&nbsp;Generated
-
-
-
     %tr
       %th Expires&nbsp;After
       %td.top= @license.valid_date

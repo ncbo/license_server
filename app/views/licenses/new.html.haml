@@ -1,6 +1,5 @@
 - @title = "Create New License"
-%h1{:style => "padding: 10px;"}
-  New License
+%h1 Create New License
 = form_for :license, url: {action: "create"}, html: {id: 'license_form'} do |f|
   = render partial: 'form', locals: { f: f }
   %p{:style => "padding: 10px;"}

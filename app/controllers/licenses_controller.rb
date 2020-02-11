@@ -68,7 +68,7 @@ class LicensesController < ApplicationController
     save_license_from_params
 
     if @errors
-      render action: :new if @errors
+      render action: :new
     else
       success = "New #{license_id_msg(@license.id)} has been successfully created."
 
@@ -87,7 +87,7 @@ class LicensesController < ApplicationController
     save_license_from_params
 
     if @errors
-      render action: :new if @errors
+      render action: :edit
     else
       flash[:success] = "License with ID: #{@license.id} has been successfully updated."
       redirect_to licenses_path
@@ -179,7 +179,7 @@ class LicensesController < ApplicationController
 
     unless uid_valid
       error = OpenStruct.new appliance_id_invalid: "#{params[:license][:appliance_id]} is not a valid Appliance ID"
-      @errors = Hash[:error, OpenStruct.new(appliance_id: error)]
+      @errors = Hash[:error, OpenStruct.new(license_appliance_id: error)]
     end
   end
 
