@@ -1,5 +1,5 @@
 = render partial: 'layouts/errors'
-= form_for :user, url: {controller: 'login', action: 'create'} do |f|
+= form_for :user, url: {controller: "login", action: "create"}, html: {method: :post, id: "login_form", class: "main-form"} do |f|
   %table.form{style: "margin-top:30px;margin-bottom:30px;"}
     %thead
     %tbody
