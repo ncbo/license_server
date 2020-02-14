@@ -35,24 +35,24 @@ class LoginController < ApplicationController
 
         redirect_to redirect
       else
-        error = OpenStruct.new login_invalid: "Invalid account name/password combination"
+        error = OpenStruct.new login_invalid: "Invalid username/password combination"
         @errors = Hash[:error, OpenStruct.new(user_username: error)]
-        render :action => 'index'
+        render action: 'index'
       end
     else
-      render :action => 'index'
+      render action: 'index'
     end
   end
 
   # Login as the provided username (only for admin users)
   def login_as
-    unless session[:user] && session[:user].admin?
+    unless helpers.current_user_admin?
       redirect_to "/"
       return
     end
 
-    user = params[:login_as]
-    new_user = LinkedData::Client::Models::User.find_by_username(user).first
+    bp_username = params[:login_as]
+    new_user = helpers.find_user_by_bp_username(bp_username)
 
     if new_user
       session[:admin_user] = session[:user]
@@ -75,7 +75,6 @@ class LoginController < ApplicationController
   def login(user)
     return unless user
     session[:user] = user
-    session[:user][:admin] = user.admin?
   end
 
   def validate(params)

@@ -6,7 +6,7 @@
       %tr
         %th Username:
         %td
-          = text_field 'user', 'username', :size => 25
+          = text_field 'user', 'username', value: params[:user] ? params[:user][:username] : '', :size => 25
       %tr
         %th Password:
         %td

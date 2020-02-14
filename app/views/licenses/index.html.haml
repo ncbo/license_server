@@ -1,28 +1,25 @@
 - @title = "Licenses"
-%h1.tab_header Licenses
+%h1 Licenses
 - if flash[:success]
-  %div#success_message{:class => "alert-box success"}
+  %div#success_message{class: "alert-box success"}
     = flash[:success]
-%p.tab_description
-  Below is a list of your current OntoPortal Appliance licenses:
-%span
-  = button_to "Create License for New Appliance", new_license_path, method: :get, class: "button button-blue"
-%br/
-%table#licenses{"data-turbolinks" => "false", class: "table table-striped table-bordered", style: "width:100%"}
+%p Below is a list of your current OntoPortal Appliance licenses:
+= button_to "Create License for New Appliance", new_license_path, method: :get, class: "button button-blue"
+%table#licenses{"data-turbolinks" => "false", class: "table table-striped table-bordered detail", style: "width:100%"}
   %thead
     %tr
       - if current_user_admin?
         %th ID
         %th Username
         %th Name
-      %th Appliance&nbsp;ID
+      %th Appliance ID
       %th Organization
-      %th Project&nbsp;Info
+      %th Project Info
       %th Reason
       %th Purpose
-      %th License&nbsp;Key?
+      %th License Key?
       %th Created
-      %th Expires&nbsp;After
+      %th Expires After
       %th Status
       %th.no-sort Actions
   %tbody
@@ -67,7 +64,7 @@
           - else
             = license.approval_status.humanize
         %td
-          - if license.approval_status === License.approval_statuses[:approved]
+          - if license.latest && license.approval_status === License.approval_statuses[:approved]
             = button_to "    Renew   ", renew_license_path(license.id), method: :post, class: "button button-blue"
           - if current_user_admin?
             = button_to "  Approve   ", approve_license_path(license.id), method: :post, class: "button button-green", data: { confirm: "Are you sure you want to approve the license with ID: #{license.id}, generate the licence key and notify the user?" }

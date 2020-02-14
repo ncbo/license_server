@@ -5,4 +5,5 @@ class License < ApplicationRecord
       pending: "pending"
   }
   belongs_to :license_purpose
+  attr_accessor :latest
 end

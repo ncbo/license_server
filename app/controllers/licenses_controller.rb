@@ -72,6 +72,17 @@ class LicensesController < ApplicationController
     else
       success = "New #{license_id_msg(@license.id)} has been successfully created."
 
+      mail_user = helpers.current_user_admin? ? helpers.find_user_by_bp_username(@license.bp_username) : session[:user]
+
+      # notify user of application received
+      NotifierMailer.with(user: mail_user, license: @license).license_request_submitted_email.deliver_now
+
+
+
+
+
+
+
       if @license.approval_status === License.approval_statuses[:approved]
         params[:id] = @license.id
         approve_license(@license.id)
@@ -106,14 +117,26 @@ class LicensesController < ApplicationController
   def render_licenses
     lic_arr = nil
     lic_hash = {}
+    max_id_sql = nil
 
     if helpers.current_user_admin?
+      max_id_sql = "SELECT appliance_id, MAX(id) FROM licenses GROUP BY appliance_id"
       lic_arr = License.order('approval_status DESC, valid_date')
     else
-      lic_arr = License.order('approval_status DESC, valid_date').where(bp_username: session[:user].username)
+      max_id_sql = "SELECT appliance_id, MAX(id) FROM licenses WHERE bp_username = '#{session[:user].username}' GROUP BY appliance_id"
+      lic_arr = License.order('approval_status DESC, valid_date DESC').where(bp_username: session[:user].username)
     end
 
+    max_ids_raw = License.connection.select_all(max_id_sql)
+    max_ids = max_ids_raw.rows.to_h
+
     lic_arr.each do |lic|
+      if lic.id === max_ids[lic.appliance_id]
+        lic.latest = true
+      else
+        lic.latest = false
+      end
+
       if lic_hash[lic.appliance_id]
         lic_hash[lic.appliance_id] << lic
       else
