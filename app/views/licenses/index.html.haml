@@ -36,8 +36,9 @@
           %strong= link_to(license.appliance_id[0..7], license_path(license.id))
           %br
           %span{:style => "font-size:75%; vertical-align:bottom;"}
+            - if current_user_admin? || license.approval_status === License.approval_statuses[:pending]
+              = link_to("Edit", edit_license_path(license.id))
             - if current_user_admin?
-              =  link_to("Edit", edit_license_path(license.id))
               &nbsp;&nbsp;
               = link_to "Delete", license_path(license.id), method: :delete, data: { confirm: "Are you sure you want to completely destroy the license with ID: #{license.id}?" }
         %td

@@ -29,7 +29,12 @@ class LicensesController < ApplicationController
 
   def edit
     @license = License.find(params[:id])
-    render action: :edit
+    # for non-admins allow editing only in "pending" state
+    if helpers.current_user_admin? || @license.approval_status === License.approval_statuses[:pending]
+      render action: :edit
+    else
+      render action: :show
+    end
   end
 
   def show
@@ -88,7 +93,7 @@ class LicensesController < ApplicationController
     if @errors[:error]
       render action: :edit
     else
-      flash[:success] = "License with ID: #{@license.id} has been successfully updated."
+      flash[:success] = "#{license_id_msg(@license.id)} has been successfully updated."
       redirect_to licenses_path
     end
   end
