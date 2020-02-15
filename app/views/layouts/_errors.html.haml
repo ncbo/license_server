@@ -1,5 +1,5 @@
 - unless @errors.nil?
-  .enable-lists{style: "color:red;"}
+  %span.error-msg
     %strong Errors On Form
     %ul
       - if @errors[:error].instance_of? OpenStruct
@@ -7,7 +7,7 @@
         - errors_hash.each do |field, error|
           -# Highlight fields with errors.
           - fld_names = field.to_s.split("_", 2)
-          <style>##{fld_names[0]}_#{fld_names[1]} { border: thin solid red; }</style>
+          <style>##{fld_names[0]}_#{fld_names[1]} { border: thin solid #ba3329; }</style>
           %li
             -# Display error message to users.
             - if error.instance_of? OpenStruct

@@ -28,6 +28,8 @@
             Please email us at <a href='mailto:#{$SUPPORT_EMAIL}'>#{$SUPPORT_EMAIL}</a> for further instructions on getting your license key.
       - else
         = @license.approval_status.humanize
+        - if license_expired?(@license)
+          %span.error-msg (Expired)
   %tr
     %th Project Information:
     %td.top= @license.project_info

@@ -2,7 +2,7 @@
 %table.form
   %thead
   %tbody
-    - if @license.id
+    - if @license.id && current_user_admin?
       %tr
         %th License ID:
         %td.top= @license.id

@@ -64,6 +64,8 @@
               Please email us at <a href='mailto:#{$SUPPORT_EMAIL}'>#{$SUPPORT_EMAIL}</a> for further instructions on getting your license key.
           - else
             = license.approval_status.humanize
+            - if license_expired?(license)
+              %span.error-msg (Expired)
         %td
           - if license.latest && license.approval_status === License.approval_statuses[:approved]
             = button_to "    Renew   ", renew_license_path(license.id), method: :post, class: "button button-blue"

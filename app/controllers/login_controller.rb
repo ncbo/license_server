@@ -75,6 +75,7 @@ class LoginController < ApplicationController
   def login(user)
     return unless user
     session[:user] = user
+    session[:user][:admin] = user.admin?
   end
 
   def validate(params)
