@@ -179,7 +179,7 @@ class LicensesController < ApplicationController
 
     if !helpers.current_user_admin? && params[:id]
       license = License.find_by(id: params[:id])
-      render file: "public/403.html", status: :forbidden if license.nil? || license.bp_username != session[:user].username
+      render file: 'public/403.html', status: :forbidden if license.nil? || license.bp_username != session[:user].username
     end
   end
 

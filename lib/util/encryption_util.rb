@@ -19,9 +19,6 @@ require 'base64'
 #puts decrypted_string
 #puts "************"
 
-
-
-
 module EncryptionUtil
   class << self
     # Returns a Base64 encoded string with encryption
