@@ -1,2 +1,36 @@
+$ORG_SITE = "OntoPortal Appliance License Server"
+
+$LICENSE_SERVER_HOST = "localhost"
+
 # BioPortal URL
 $BP_UI_URL = "https://bioportal.bioontology.org"
+
+# BioPortal REST URL
+$BP_REST_URL = "https://data.bioontology.org"
+
+$API_KEY = "your_bp_apikey"
+
+# The PURL URL is generated using this prefix + the abbreviation for an ontology.
+$PURL_PREFIX = "http://purl.bioontology.org/ontology"
+
+$PRIVATE_KEY_FILE = 'path_to_private_key_file'
+$PUBLIC_KEY_FILE = 'path_to_public_key_file'
+
+$LICENSE_VALIDITY_MONTHS = 12
+$LEGACY_APPLIANCE_ID = "legacy-appliance-id"
+
+# Enable client request caching
+$CLIENT_REQUEST_CACHING = false
+
+# Enable debugging of API Ruby client
+$DEBUG_RUBY_CLIENT = false
+$DEBUG_RUBY_CLIENT_KEYS = []
+
+$SUPPORT_EMAIL = "support@example.com"
+
+# SMTP settings
+ActionMailer::Base.smtp_settings = {
+    :address  => 'smtp.example.com', # smtp server address, ex: smtp.example.com
+    :port  => 25, # smtp server port
+    :domain  => 'rails.domain.com', # fqdn of rails server, ex: rails.domain.com
+}
