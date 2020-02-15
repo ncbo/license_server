@@ -5,28 +5,19 @@ require 'uuid'
 class LicensesController < ApplicationController
   skip_before_action :verify_authenticity_token
   layout 'main'
+  before_action :check_access
   before_action :check_for_cancel, :only => [:create, :update]
   before_action :init_license_purposes
 
   def index
-    if session[:user].nil?
-      redirect_to :controller => 'login', :action => 'index'
-    else
-      render_licenses
-      render action: :index
-    end
-  end
-
-  def show
-    @license = License.find(params[:id])
-    render action: :show
+    render_licenses
+    render action: :index
   end
 
   def new
-    if session[:user].nil?
-      redirect_to :controller => 'login', :action => 'index'
-    else
-      @license = License.new
+    @license = License.new
+
+    unless helpers.current_user_admin?
       unless session[:user].firstName.strip.empty?
         @license.first_name = session[:user].firstName.strip
       end
@@ -34,6 +25,16 @@ class LicensesController < ApplicationController
         @license.last_name = session[:user].lastName.strip
       end
     end
+  end
+
+  def edit
+    @license = License.find(params[:id])
+    render action: :edit
+  end
+
+  def show
+    @license = License.find(params[:id])
+    render action: :show
   end
 
   def approve
@@ -59,29 +60,16 @@ class LicensesController < ApplicationController
     render action: :new
   end
 
-  def edit
-    @license = License.find(params[:id])
-    render action: :edit
-  end
-
   def create
     save_license_from_params
 
-    if @errors
+    if @errors[:error]
       render action: :new
     else
       success = "New #{license_id_msg(@license.id)} has been successfully created."
-
       mail_user = helpers.current_user_admin? ? helpers.find_user_by_bp_username(@license.bp_username) : session[:user]
-
       # notify user of application received
-      NotifierMailer.with(user: mail_user, license: @license).license_request_submitted_email.deliver_now
-
-
-
-
-
-
+      NotifierMailer.with(user: mail_user, license: @license).license_request_submitted.deliver_now
 
       if @license.approval_status === License.approval_statuses[:approved]
         params[:id] = @license.id
@@ -97,7 +85,7 @@ class LicensesController < ApplicationController
   def update
     save_license_from_params
 
-    if @errors
+    if @errors[:error]
       render action: :edit
     else
       flash[:success] = "License with ID: #{@license.id} has been successfully updated."
@@ -173,11 +161,11 @@ class LicensesController < ApplicationController
       @license = License.new
     end
 
-    @license.bp_username = session[:user].username
+    params[:license][:bp_username] ||= session[:user].username
     @license.assign_attributes(params[:license])
-    validate
+    @errors = validate(params[:license])
 
-    unless @errors
+    unless @errors[:error]
       if @license.valid?
         @license.save
       else
@@ -186,24 +174,45 @@ class LicensesController < ApplicationController
     end
   end
 
-  def check_for_cancel
+  def check_access()
+    redirect_to controller: 'login', action: 'index' unless helpers.logged_in?
+
+    if !helpers.current_user_admin? && params[:id]
+      license = License.find_by(id: params[:id])
+      render file: "public/403.html", status: :forbidden if license.nil? || license.bp_username != session[:user].username
+    end
+  end
+
+  def check_for_cancel()
     if params[:cancel] == "Cancel"
       redirect_to licenses_path
     end
   end
 
-  def init_license_purposes
+  def init_license_purposes()
     @license_purposes = LicensePurpose.all.order(:sort_order)
   end
 
-  def validate
+  def validate(params)
+    errors = {}
+    err_hash = OpenStruct.new
     re = Regexp.new("^#{$LEGACY_APPLIANCE_ID}-[0-9a-z]+$").freeze
-    uid_valid = re.match?(params[:license][:appliance_id]) || UUID.validate(params[:license][:appliance_id])
+    uid_valid = re.match?(params[:appliance_id]) || UUID.validate(params[:appliance_id])
 
     unless uid_valid
-      error = OpenStruct.new appliance_id_invalid: "#{params[:license][:appliance_id]} is not a valid Appliance ID"
-      @errors = Hash[:error, OpenStruct.new(license_appliance_id: error)]
+      error = OpenStruct.new appliance_id_invalid: "#{params[:appliance_id]} is not a valid Appliance ID"
+      err_hash[:license_appliance_id] = error
     end
+
+    bp_user = helpers.find_user_by_bp_username(params[:bp_username])
+
+    unless bp_user
+      error = OpenStruct.new username_invalid: "#{params[:bp_username]} is not a valid BioPortal user"
+      err_hash[:license_bp_username] = error
+    end
+
+    errors[:error] = err_hash unless err_hash.to_h.empty?
+    errors
   end
 
   def license_id_msg(id)

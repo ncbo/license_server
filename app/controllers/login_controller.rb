@@ -22,7 +22,7 @@ class LoginController < ApplicationController
   def create
     @errors = validate(params[:user])
 
-    if @errors[:error].to_h.empty?
+    unless @errors[:error]
       logged_in_user = LinkedData::Client::Models::User.authenticate(params[:user][:username], params[:user][:password])
 
       if logged_in_user && !logged_in_user.errors
@@ -91,7 +91,7 @@ class LoginController < ApplicationController
       err_hash[:user_password] = error
     end
 
-    errors[:error] = err_hash unless err_hash.empty?
+    errors[:error] = err_hash unless err_hash.to_h.empty?
     errors
   end
 end
