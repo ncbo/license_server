@@ -6,4 +6,8 @@ class License < ApplicationRecord
   }
   belongs_to :license_purpose
   attr_accessor :latest
+
+  def expired?()
+    self.valid_date && self.valid_date.to_date < Date.today
+  end
 end
