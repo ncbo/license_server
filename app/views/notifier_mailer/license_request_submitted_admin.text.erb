@@ -1,0 +1,20 @@
+Dear Reviewer,
+
+A new license request (ID: <%= @license.id %>) for Appliance ID: <%= @license.appliance_id %> has been submitted.
+
+Request Info:
+
+Username: <%= @license.bp_username %> (<%= $BP_REST_URL %>/users/<%= @license.bp_username %>)
+Name: <%= @license.first_name %> <%= @license.last_name %>
+Organization: <%= @license.organization %>
+Project Purpose: <%= @license.license_purpose.name %>
+Project Info: <%= @license.project_info %>
+Reason: <%= @license.reason %>
+
+Please review and approve/disapprove this request at your earliest convenience by navigating to the licence server:
+
+<%= license_url(@license.id) %>
+
+Sincerely,
+
+The OntoPortal Team

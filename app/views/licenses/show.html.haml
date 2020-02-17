@@ -56,5 +56,13 @@
     %tr
       %th Admin Comments:
       %td.top= @license.comments
+
+    %tr
+      %td
+      %td
+        %span{style: "float:left;margin-right:20px;"}
+          = button_to "  Approve   ", approve_license_path(@license.id), method: :post, class: "button button-green", data: { confirm: "Are you sure you want to approve the license with ID: #{@license.id}, generate the licence key and notify the user?" }
+        %span
+          = button_to "Disapprove ", disapprove_license_path(@license.id), method: :post, class: "button button-red", data: { confirm: "Are you sure you want to disapprove the license with ID: #{@license.id}?" }
 %br
 = link_to 'Back to Licenses', :back

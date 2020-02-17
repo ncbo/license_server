@@ -1,0 +1,13 @@
+<p>Dear Reviewer,</p>
+<p>A new license request (ID: <%= @license.id %>) for Appliance ID: <%= @license.appliance_id %> has been submitted.</p>
+<p>Request Info:</p>
+<p><strong>Username:</strong> <%= @license.bp_username %> (<a href="<%= $BP_REST_URL %>/users/<%= @license.bp_username %>"><%= $BP_REST_URL %>/users/<%= @license.bp_username %></a>)<br/>
+  <strong>Name:</strong> <%= @license.first_name %> <%= @license.last_name %><br/>
+  <strong>Organization:</strong> <%= @license.organization %><br/>
+  <strong>Project Purpose:</strong> <%= @license.license_purpose.name %><br/>
+  <strong>Project Info:</strong> <%= @license.project_info %><br/>
+  <strong>Reason:</strong> <%= @license.reason %><br/></p>
+<p>Please review and approve/disapprove this request at your earliest convenience by navigating to the licence server:</p>
+<p><a href="<%= license_url(@license.id) %>"><%= license_url(@license.id) %></a></p>
+<p>Sincerely,</p>
+<p>The OntoPortal Team</p>

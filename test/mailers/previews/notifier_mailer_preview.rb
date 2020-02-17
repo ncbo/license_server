@@ -7,4 +7,10 @@ class NotifierMailerPreview < ActionMailer::Preview
     user = find_user_by_bp_username(lic.bp_username)
     NotifierMailer.with(user: user, license: lic).license_request_submitted
   end
+
+  def license_request_submitted_admin
+    lic = License.first
+    user = find_user_by_bp_username(lic.bp_username)
+    NotifierMailer.with(user: user, license: lic).license_request_submitted_admin
+  end
 end

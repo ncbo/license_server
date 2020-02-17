@@ -1,6 +1,6 @@
 - unless @errors.nil?
   %span.error-msg
-    %strong Errors On Form
+    %h4 Errors On Form
     %ul
       - if @errors[:error].instance_of? OpenStruct
         - errors_hash = @errors[:error].to_h.except :links, :context
