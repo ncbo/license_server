@@ -27,6 +27,7 @@ $DEBUG_RUBY_CLIENT = false
 $DEBUG_RUBY_CLIENT_KEYS = []
 
 $SUPPORT_EMAIL = "support@example.com"
+$ADMIN_EMAIL = "admin@example.com"
 
 # SMTP settings
 ActionMailer::Base.smtp_settings = {

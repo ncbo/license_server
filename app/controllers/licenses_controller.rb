@@ -75,6 +75,8 @@ class LicensesController < ApplicationController
       mail_user = helpers.current_user_admin? ? helpers.find_user_by_bp_username(@license.bp_username) : session[:user]
       # notify user of application received
       NotifierMailer.with(user: mail_user, license: @license).license_request_submitted.deliver_now
+      # notify admin of application received
+      NotifierMailer.with(license: @license).license_request_submitted_admin.deliver_now
 
       if @license.approval_status === License.approval_statuses[:approved]
         params[:id] = @license.id
