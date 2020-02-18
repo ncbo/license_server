@@ -15,4 +15,8 @@ class NotifierMailer < ApplicationMailer
     mail(to: params[:user].email, subject: "License Request for Appliance ID: #{@license.appliance_id} Approved")
   end
 
+  def license_request_disapproved
+    @license = params[:license]
+    mail(to: params[:user].email, subject: "License Request for Appliance ID: #{@license.appliance_id} Needs Additional Info")
+  end
 end

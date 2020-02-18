@@ -44,7 +44,7 @@ class LicensesController < ApplicationController
 
   def approve
     approve_license(params[:id])
-    flash[:success] = "License with ID: #{params[:id]} has been approved."
+    flash[:success] = "License with ID: #{params[:id]} has been approved. The user has been notified."
     redirect_to licenses_path
   end
 
@@ -54,7 +54,10 @@ class LicensesController < ApplicationController
     license.valid_date = nil
     license.license_key = nil
     license.save
-    flash[:success] = "License with ID: #{license.id} has been disapproved."
+    mail_user = helpers.find_user_by_bp_username(license.bp_username)
+    # notify user of application disapproved
+    NotifierMailer.with(user: mail_user, license: license).license_request_disapproved.deliver_now
+    flash[:success] = "License with ID: #{license.id} has been disapproved. The user has been notified. Please contact them at #{mail_user.email} with additional detail."
     redirect_to licenses_path
   end
 
@@ -81,7 +84,7 @@ class LicensesController < ApplicationController
       if @license.approval_status === License.approval_statuses[:approved]
         params[:id] = @license.id
         approve_license(@license.id)
-        success << " A license key has been generated."
+        success << " A license key has been generated and sent to the user."
       end
 
       flash[:success] = success
