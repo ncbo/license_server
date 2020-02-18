@@ -13,4 +13,10 @@ class NotifierMailerPreview < ActionMailer::Preview
     user = find_user_by_bp_username(lic.bp_username)
     NotifierMailer.with(user: user, license: lic).license_request_submitted_admin
   end
+
+  def license_request_approved
+    lic = License.where.not(license_key: [nil, ""]).where.not(valid_date: nil).first
+    user = find_user_by_bp_username(lic.bp_username)
+    NotifierMailer.with(user: user, license: lic).license_request_approved
+  end
 end

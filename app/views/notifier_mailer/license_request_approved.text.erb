@@ -1,0 +1,12 @@
+Dear <%= @license.first_name %>,
+
+Your license request for Appliance ID: <%= @license.appliance_id %> has been approved. Included below is your license key:
+
+<%= @license.license_key %>
+This license key is valid through <%= @license.valid_date %>.
+
+You can also retrieve this key by logging in to our license server: <%= root_url %>.
+
+Sincerely,
+
+The OntoPortal Team
