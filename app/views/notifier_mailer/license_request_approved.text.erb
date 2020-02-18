@@ -3,7 +3,9 @@ Dear <%= @license.first_name %>,
 Your license request for Appliance ID: <%= @license.appliance_id %> has been approved. Included below is your license key:
 
 <%= @license.license_key %>
-This license key is valid through <%= @license.valid_date %>.
+Please log in to your Appliance Administration Console and copy this key into the field provided.
+
+This license key is valid through <%= @license.valid_date.strftime('%A, %B %m, %Y') %>.
 
 You can also retrieve this key by logging in to our license server: <%= root_url %>.
 

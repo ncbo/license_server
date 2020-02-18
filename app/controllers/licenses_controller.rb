@@ -157,6 +157,9 @@ class LicensesController < ApplicationController
     end
 
     license.save
+    mail_user = helpers.find_user_by_bp_username(license.bp_username)
+    # notify user of application approved
+    NotifierMailer.with(user: mail_user, license: license).license_request_approved.deliver_now
   end
 
   def save_license_from_params()
