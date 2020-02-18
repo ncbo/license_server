@@ -1,6 +1,6 @@
 <p>Dear <%= @license.first_name %>,</p>
 <p>Your license request for Appliance ID: <%= @license.appliance_id %> was not approved. This is often caused by an incomplete application or the project information lacking important detail.</p>
-<p>You should receive a separate email directly from our reviewer describing the issue with your application. If you haven't received this additional email in the next 24-48 hours, please contact us at <a href="mailto:<%= $SUPPORT_EMAIL %>"><%= $SUPPORT_EMAIL %></a>. When writing to us, please reference the License Application ID: <%= @license.id %> and the Appliance ID: <%= @license.appliance_id %>.</p>
+<p>You should receive a separate email directly from our reviewer describing the issue with your application. If you haven't received this email in the next 24-48 hours, please contact us at <a href="mailto:<%= $SUPPORT_EMAIL %>"><%= $SUPPORT_EMAIL %></a>. When writing to us, please reference the License Application ID: <%= @license.id %> and the Appliance ID: <%= @license.appliance_id %>.</p>
 <p>We look forward to getting your application approved.</p>
 <p>Sincerely,</p>
 <p>The OntoPortal Team</p>

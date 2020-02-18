@@ -74,7 +74,7 @@ class LicensesController < ApplicationController
     if @errors[:error]
       render action: :new
     else
-      success = "New #{license_id_msg(@license.id)} has been successfully created."
+      success = "New #{license_id_msg(@license)} has been successfully created."
       mail_user = helpers.current_user_admin? ? helpers.find_user_by_bp_username(@license.bp_username) : session[:user]
       # notify user of application received
       NotifierMailer.with(user: mail_user, license: @license).license_request_submitted.deliver_now
@@ -84,7 +84,7 @@ class LicensesController < ApplicationController
       if @license.approval_status === License.approval_statuses[:approved]
         params[:id] = @license.id
         approve_license(@license.id)
-        success << " A license key has been generated and sent to the user."
+        success << " A license key has been generated and emailed to the user."
       end
 
       flash[:success] = success
@@ -98,7 +98,7 @@ class LicensesController < ApplicationController
     if @errors[:error]
       render action: :edit
     else
-      flash[:success] = "#{license_id_msg(@license.id)} has been successfully updated."
+      flash[:success] = "#{license_id_msg(@license)} has been successfully updated."
       redirect_to licenses_path
     end
   end
@@ -188,11 +188,13 @@ class LicensesController < ApplicationController
   end
 
   def check_access()
-    redirect_to controller: 'login', action: 'index' unless helpers.logged_in?
-
-    if !helpers.current_user_admin? && params[:id]
-      license = License.find_by(id: params[:id])
-      render file: 'public/403.html', status: :forbidden if license.nil? || license.bp_username != session[:user].username
+    if helpers.logged_in?
+      if !helpers.current_user_admin? && params[:id]
+        license = License.find_by(id: params[:id])
+        render file: 'public/403.html', status: :forbidden if license.nil? || license.bp_username != session[:user].username
+      end
+    else
+      redirect_to controller: 'login', action: 'index', redirect: request.url
     end
   end
 
@@ -228,11 +230,13 @@ class LicensesController < ApplicationController
     errors
   end
 
-  def license_id_msg(id)
+  def license_id_msg(license)
     msg = "License"
 
     if helpers.current_user_admin?
-      msg << " with ID: #{id}"
+      msg << " with ID: #{license.id}"
+    else
+      msg << " for Appliance ID: #{license.appliance_id}"
     end
     msg
   end

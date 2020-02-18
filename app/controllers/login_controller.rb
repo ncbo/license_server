@@ -5,16 +5,16 @@ class LoginController < ApplicationController
   def index
     if helpers.logged_in?
       redirect_to licenses_path
-    end
-
-    # Sets the redirect properties
-    if params[:redirect]
-      # Get the original, encoded redirect
-      uri = URI.parse(request.url)
-      orig_params = Hash[uri.query.split("&").map {|e| e.split("=",2)}].symbolize_keys
-      session[:redirect] = orig_params[:redirect]
     else
-      session[:redirect] = request.referer
+      # Sets the redirect properties
+      if params[:redirect]
+        # Get the original, encoded redirect
+        uri = URI.parse(request.url)
+        orig_params = Hash[uri.query.split("&").map {|e| e.split("=",2)}].symbolize_keys
+        session[:redirect] = orig_params[:redirect]
+      else
+        session[:redirect] = request.referer
+      end
     end
   end
 

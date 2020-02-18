@@ -55,9 +55,9 @@
           - else
             Not&nbsp;generated
         %td
-          = license.created_at
+          = license.created_at.strftime("%m/%d/%Y\n%I:%M %p")
         %td
-          = license.valid_date
+          = license.valid_date? ? license.valid_date.strftime('%m/%d/%Y') : ''
         %td
           - if !current_user_admin? && license.approval_status === License.approval_statuses[:disapproved]
             :plain
