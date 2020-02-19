@@ -1,8 +1,8 @@
 <p>Dear <%= @license.first_name %>,</p>
 <p>Your license request for Appliance ID: <%= @license.appliance_id %> has been approved. Included below is your license key:</p>
 <pre><%= @license.license_key %></pre>
-<p>Please log in to your Appliance Administration Console and copy this key into the field provided.</p>
-<p>This license key is valid through <%= @license.valid_date.strftime('%A, %B %m, %Y') %>.</p>
+<p>Please log in to your OntoPortal Appliance Administration Console and copy this key into the field provided.</p>
+<p>This license key is valid through <%= @license.valid_date.strftime('%A, %B %d, %Y') %>.</p>
 <p>You can also retrieve this key by logging in to our license server: <a href="<%= root_url %>"><%= root_url %></a>.</p>
 <p>Sincerely,</p>
 <p>The OntoPortal Team</p>
