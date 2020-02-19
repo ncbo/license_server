@@ -63,11 +63,16 @@
     %tr
       %th Admin Comments:
       %td.top= @license.comments
-    %tr
-      %td
-      %td
+  %tr
+    %td
+    %td
+      - if current_user_admin? || @license.approval_status === License.approval_statuses[:pending]
         %span{style: "float:left;margin-right:20px;"}
           = button_to "      Edit      ", edit_license_path(@license.id), method: :get, class: "button button-blue"
+      - if @license.latest && @license.approval_status === License.approval_statuses[:approved]
+        %span{style: "float:left;margin-right:20px;"}
+          = button_to "    Renew   ", renew_license_path(@license.id), method: :post, class: "button button-blue"
+      - if current_user_admin? && !@license.expired?
         %span{style: "float:left;margin-right:20px;"}
           = button_to "  Approve   ", approve_license_path(@license.id), method: :post, class: "button button-green", data: { confirm: "Are you sure you want to approve the license with ID: #{@license.id}, generate the licence key and notify the user?" }
         %span

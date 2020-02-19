@@ -69,6 +69,6 @@
         %td
           - if license.latest && license.approval_status === License.approval_statuses[:approved]
             = button_to "    Renew   ", renew_license_path(license.id), method: :post, class: "button button-blue"
-          - if current_user_admin?
+          - if current_user_admin? && !license.expired?
             = button_to "  Approve   ", approve_license_path(license.id), method: :post, class: "button button-green", data: { confirm: "Are you sure you want to approve the license with ID: #{license.id}, generate the licence key and notify the user?" }
             = button_to "Disapprove ", disapprove_license_path(license.id), method: :post, class: "button button-red", data: { confirm: "Are you sure you want to disapprove the license with ID: #{license.id}?" }

@@ -6,9 +6,10 @@ class LicensesController < ApplicationController
   skip_before_action :verify_authenticity_token
   layout 'main'
   before_action :check_access
-  before_action :check_exists
+  before_action :check_license_exists
   before_action :check_for_cancel, :only => [:create, :update]
   before_action :init_license_purposes
+  before_action :init_max_ids, :only => [:index, :show]
 
   def index
     render_licenses
@@ -40,6 +41,13 @@ class LicensesController < ApplicationController
 
   def show
     @license = License.find_by(id: params[:id])
+
+    if @license.id === @max_ids[@license.appliance_id]
+      @license.latest = true
+    else
+      @license.latest = false
+    end
+
     render action: :show
   end
 
@@ -116,21 +124,15 @@ class LicensesController < ApplicationController
   def render_licenses
     lic_arr = nil
     lic_hash = {}
-    max_id_sql = nil
 
     if helpers.current_user_admin?
-      max_id_sql = "SELECT appliance_id, MAX(id) FROM licenses GROUP BY appliance_id"
       lic_arr = License.order('approval_status DESC, valid_date')
     else
-      max_id_sql = "SELECT appliance_id, MAX(id) FROM licenses WHERE bp_username = '#{session[:user].username}' GROUP BY appliance_id"
       lic_arr = License.order('approval_status DESC, valid_date DESC').where(bp_username: session[:user].username)
     end
 
-    max_ids_raw = License.connection.select_all(max_id_sql)
-    max_ids = max_ids_raw.rows.to_h
-
     lic_arr.each do |lic|
-      if lic.id === max_ids[lic.appliance_id]
+      if lic.id === @max_ids[lic.appliance_id]
         lic.latest = true
       else
         lic.latest = false
@@ -199,7 +201,7 @@ class LicensesController < ApplicationController
     end
   end
 
-  def check_exists()
+  def check_license_exists()
     if helpers.current_user_admin? && params[:id]
       license = @license || License.find_by(id: params[:id])
       render file: 'public/404.html', status: :not_found if license.nil?
@@ -214,6 +216,17 @@ class LicensesController < ApplicationController
 
   def init_license_purposes()
     @license_purposes = LicensePurpose.all.order(:sort_order)
+  end
+
+  def init_max_ids()
+    if helpers.current_user_admin?
+      max_id_sql = "SELECT appliance_id, MAX(id) FROM licenses GROUP BY appliance_id"
+    else
+      max_id_sql = "SELECT appliance_id, MAX(id) FROM licenses WHERE bp_username = '#{session[:user].username}' GROUP BY appliance_id"
+    end
+
+    max_ids_raw = License.connection.select_all(max_id_sql)
+    @max_ids = max_ids_raw.rows.to_h
   end
 
   def validate(params)
