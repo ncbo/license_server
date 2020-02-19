@@ -6,6 +6,7 @@ class LicensesController < ApplicationController
   skip_before_action :verify_authenticity_token
   layout 'main'
   before_action :check_access
+  before_action :check_exists
   before_action :check_for_cancel, :only => [:create, :update]
   before_action :init_license_purposes
 
@@ -38,7 +39,7 @@ class LicensesController < ApplicationController
   end
 
   def show
-    @license = License.find(params[:id])
+    @license = License.find_by(id: params[:id])
     render action: :show
   end
 
@@ -195,6 +196,13 @@ class LicensesController < ApplicationController
       end
     else
       redirect_to controller: 'login', action: 'index', redirect: request.url
+    end
+  end
+
+  def check_exists()
+    if helpers.current_user_admin? && params[:id]
+      license = @license || License.find_by(id: params[:id])
+      render file: 'public/404.html', status: :not_found if license.nil?
     end
   end
 
