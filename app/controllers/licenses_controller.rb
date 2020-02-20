@@ -23,6 +23,7 @@ class LicensesController < ApplicationController
       unless session[:user].firstName.strip.empty?
         @license.first_name = session[:user].firstName.strip
       end
+
       unless session[:user].lastName.strip.empty?
         @license.last_name = session[:user].lastName.strip
       end
@@ -31,6 +32,7 @@ class LicensesController < ApplicationController
 
   def edit
     @license = License.find(params[:id])
+
     # for non-admins allow editing only in "pending" state
     if helpers.current_user_admin? || @license.approval_status === License.approval_statuses[:pending]
       render action: :edit
@@ -41,13 +43,7 @@ class LicensesController < ApplicationController
 
   def show
     @license = License.find_by(id: params[:id])
-
-    if @license.id === @max_ids[@license.appliance_id]
-      @license.latest = true
-    else
-      @license.latest = false
-    end
-
+    @license.latest = (@license.id === @max_ids[@license.appliance_id])
     render action: :show
   end
 
@@ -124,23 +120,27 @@ class LicensesController < ApplicationController
   def render_licenses
     lic_arr = nil
     lic_hash = {}
+    color_arr = ["rgba(255,255,255,1)", "rgba(0,0,0,0.05)"]
+    i = 0
+    color_hash = {}
 
     if helpers.current_user_admin?
-      lic_arr = License.order('approval_status DESC, valid_date')
+      lic_arr = License.order('approval_status DESC, id DESC')
     else
-      lic_arr = License.order('approval_status DESC, valid_date DESC').where(bp_username: session[:user].username)
+      lic_arr = License.order('approval_status DESC, id DESC').where(bp_username: session[:user].username)
     end
 
     lic_arr.each do |lic|
-      if lic.id === @max_ids[lic.appliance_id]
-        lic.latest = true
-      else
-        lic.latest = false
-      end
+      lic.latest = (lic.id === @max_ids[lic.appliance_id])
 
       if lic_hash[lic.appliance_id]
+        lic.row_color = color_hash[lic.appliance_id]
         lic_hash[lic.appliance_id] << lic
       else
+        i += 1
+        arr_elem = i % 2
+        lic.row_color = color_arr[arr_elem]
+        color_hash[lic.appliance_id] = color_arr[arr_elem]
         lic_hash[lic.appliance_id] = [lic]
       end
     end

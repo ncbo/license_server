@@ -8,6 +8,7 @@ $(document).ready(function () {
 function renderTable() {
   var licTable = $('#licenses').dataTable({
     "order": [],
+    "stripeClasses": [],
     columnDefs: [{
       targets: 'no-sort',
       orderable: false,

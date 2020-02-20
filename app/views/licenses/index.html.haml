@@ -17,14 +17,14 @@
       %th Project Info
       %th Reason
       %th Purpose
-      %th License Key?
+      %th License Key
       %th Created
       %th Expires After
       %th Status
       %th.no-sort Actions
   %tbody
     - for license in @licenses
-      %tr
+      %tr{style: "background-color: #{license.row_color}"}
         - if current_user_admin?
           %td
             = license.id
@@ -35,7 +35,7 @@
         %td
           %strong= link_to(license.appliance_id[0..7], license_path(license.id))
           %br
-          %span{:style => "font-size:75%; vertical-align:bottom;"}
+          %span{style: "font-size:75%; vertical-align:bottom;"}
             - if current_user_admin? || license.approval_status === License.approval_statuses[:pending]
               = link_to("Edit", edit_license_path(license.id))
             - if current_user_admin?
