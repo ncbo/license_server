@@ -14,13 +14,13 @@
   - if current_user_admin?
     %tr
       %th BioPortal Username:
-      %td.top= @license.bp_username
+      %td.top
+        = @license.bp_username
+        (<a href="#{$BP_REST_URL}/users/#{@license.bp_username}?display=all" target="_blank">#{$BP_REST_URL}/users/#{@license.bp_username}</a>)
   %tr
     %th Name:
     %td.top
       #{@license.first_name} #{@license.last_name}
-      - if current_user_admin?
-        (<a href="#{$BP_REST_URL}/users/#{@license.bp_username}" target="_blank">#{$BP_REST_URL}/users/#{@license.bp_username}</a>)
   %tr
     %th Organization:
     %td.top= @license.organization

@@ -10,16 +10,17 @@
     %tr
       - if current_user_admin?
         %th ID
+      %th Appliance ID
+      - if current_user_admin?
         %th Username
         %th Name
-      %th Appliance ID
       %th Organization
       %th Project Info
       %th Reason
       %th Purpose
       %th License Key
       %th Created
-      %th Expires After
+      %th Expires
       %th Status
       %th.no-sort Actions
   %tbody
@@ -27,27 +28,29 @@
       %tr{style: license.row_color.empty? ? "" : "background-color: #{license.row_color}"}
         - if current_user_admin?
           %td= license.id
-          %td= license.bp_username
+        %td
+          = link_to license.appliance_id.start_with?($LEGACY_APPLIANCE_ID) ? license.appliance_id[0..5] : license.appliance_id[0..11], license_path(license.id)
+          %br/
+          %span{style: "font-size:85%;"}
+            - if current_user_admin? || license.approval_status === License.approval_statuses[:pending]
+              %span{style: "float:left;margin-top:10px;"}
+                = button_to "Edit", edit_license_path(license.id), method: :get, class: "button button-blue button-sm"
+            - if current_user_admin?
+              %span{style: "float:right;margin-top:10px;margin-right:10px;"}
+                = button_to "Delete", license_path(license.id), method: :delete, class: "button button-red button-sm", data: { confirm: "Are you sure you want to completely destroy the license with ID: #{license.id}?" }
+        - if current_user_admin?
+          %td= link_to license.bp_username, "#{$BP_REST_URL}/users/#{license.bp_username}?display=all", target: "_blank"
           %td
             = license.first_name
             %br/
             = license.last_name
-        %td
-          %strong= link_to license.appliance_id.start_with?($LEGACY_APPLIANCE_ID) ? license.appliance_id[0..5] : license.appliance_id[0..7], license_path(license.id)
-          %br/
-          %span{style: "font-size:85%;"}
-            - if current_user_admin? || license.approval_status === License.approval_statuses[:pending]
-              = link_to "Edit", edit_license_path(license.id)
-            - if current_user_admin?
-              &nbsp;&nbsp;
-              = link_to "Delete", license_path(license.id), method: :delete, data: { confirm: "Are you sure you want to completely destroy the license with ID: #{license.id}?" }
         %td= license.organization
         %td= license.project_info
         %td= license.reason
         %td= license.license_purpose.name
         %td
           - if license.license_key
-            = link_to("Show", license_path(license.id))
+            = link_to "Show", license_path(license.id)
           - else
             Not generated
         %td= license.created_at.strftime("%m/%d/%Y\n%I:%M %p")
@@ -62,7 +65,7 @@
               %span.error-msg (Expired)
         %td
           - if license.latest && license.approval_status === License.approval_statuses[:approved]
-            = button_to "Renew", renew_license_path(license.id), method: :post, class: "button button-blue", style: "width:120px;"
+            = button_to "Renew", renew_license_path(license.id), params: {title: "renew"}, method: :post, class: "button button-blue", style: "width:120px;"
           - if current_user_admin? && !license.expired?
             = button_to "Approve", approve_license_path(license.id), method: :post, class: "button button-green", style: "width:120px;", data: { confirm: "Are you sure you want to approve the license with ID: #{license.id}, generate the licence key and notify the user?" }
             = button_to "Disapprove", disapprove_license_path(license.id), method: :post, class: "button button-red", style: "width:120px;", data: { confirm: "Are you sure you want to disapprove the license with ID: #{license.id}?" }

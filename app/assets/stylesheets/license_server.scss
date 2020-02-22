@@ -309,7 +309,8 @@ ul li {
 
 strong{ font-weight: bold;}
 
-.button{ @include buttonize(0, 0, 95, 1); border-radius: 3px; cursor: pointer; display: inline-block; font-family: Verdana, sans-serif; font-size: 14px; font-weight: 500; line-height: 20px; padding: 9px 16px 9px; margin:0 0 15px 0; transition: all 20ms ease-out; vertical-align: top;}
+.button{ @include buttonize(0, 0, 95, 1); border-radius: 3px; cursor: pointer; display: inline-block; font-family: Verdana, sans-serif; font-size: 14px; font-weight: 500; line-height: 20px; padding: 9px 16px 9px; margin: 0 0 15px 0; transition: all 20ms ease-out; vertical-align: top;}
+.button-sm{line-height: 25px;padding: 0 8px;font-size: 12px;}
 .button-blue{ @include buttonize(199, 71, 89);}
 .button-green{ @include buttonize(97, 42, 80);}
 .button-purple{ @include buttonize(249, 34, 73);}
