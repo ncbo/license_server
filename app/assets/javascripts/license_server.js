@@ -6,7 +6,7 @@ $(document).ready(function () {
 });
 
 function renderTable() {
-  var licTable = $('#licenses').dataTable({
+  var licTable = $('#licenses').DataTable({
     "order": [],
     "stripeClasses": [],
     columnDefs: [{

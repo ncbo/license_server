@@ -24,7 +24,7 @@
       %th.no-sort Actions
   %tbody
     - for license in @licenses
-      %tr{style: "background-color: #{license.row_color}"}
+      %tr{style: license.row_color.empty? ? "" : "background-color: #{license.row_color}"}
         - if current_user_admin?
           %td
             = license.id

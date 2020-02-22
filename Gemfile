@@ -32,6 +32,7 @@ gem 'multi_json'
 gem 'haml'
 gem 'dalli'
 gem 'uuid'
+gem 'chroma'
 
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'

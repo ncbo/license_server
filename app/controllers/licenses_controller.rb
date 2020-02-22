@@ -120,9 +120,6 @@ class LicensesController < ApplicationController
   def render_licenses
     lic_arr = nil
     lic_hash = {}
-    color_arr = ["rgba(255,255,255,1)", "rgba(0,0,0,0.05)"]
-    i = 0
-    color_hash = {}
 
     if helpers.current_user_admin?
       lic_arr = License.order('approval_status DESC, id DESC')
@@ -131,16 +128,13 @@ class LicensesController < ApplicationController
     end
 
     lic_arr.each do |lic|
+      color = lic.appliance_id[0..5]
+      lic.row_color = color === $LEGACY_APPLIANCE_ID[0..5] ? '' : color.paint.spin(30).opacity(0.1).to_rgb
       lic.latest = (lic.id === @max_ids[lic.appliance_id])
 
       if lic_hash[lic.appliance_id]
-        lic.row_color = color_hash[lic.appliance_id]
         lic_hash[lic.appliance_id] << lic
       else
-        i += 1
-        arr_elem = i % 2
-        lic.row_color = color_arr[arr_elem]
-        color_hash[lic.appliance_id] = color_arr[arr_elem]
         lic_hash[lic.appliance_id] = [lic]
       end
     end
