@@ -5,15 +5,12 @@
     %tbody
       %tr
         %th Username:
-        %td
-          = text_field 'user', 'username', value: params[:user] ? params[:user][:username] : '', :size => 25
+        %td= text_field 'user', 'username', value: params[:user] ? params[:user][:username] : '', size: 25
       %tr
         %th Password:
-        %td
-          = password_field 'user', 'password', :size => 25, :autocomplete => "off"
+        %td= password_field 'user', 'password', size: 25, autocomplete: "off"
       %tr
-        %td{colspan: "2", align: "right"}
-          = submit_tag "Login", class: "button button-blue"
+        %td{colspan: "2", align: "right"}= submit_tag "Login", class: "button button-blue"
   %p
     Not Registered Yet?
-    = link_to "Sign Up", "#{$BP_UI_URL}/accounts/new", target: "_blank"
+    = link_to "Sign Up Now!", "#{$BP_UI_URL}/accounts/new", target: "_blank"

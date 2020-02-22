@@ -1,9 +1,9 @@
-- @title = "Licenses"
-%h1 Licenses
+- @title = current_user_admin? ? "All Licenses" : "My Licenses"
+%h1= current_user_admin? ? "All Licenses" : "My Licenses"
 - if flash[:success]
   %div#success_message{class: "alert-box success"}
     = flash[:success]
-%p Below is a list of your current OntoPortal Appliance licenses:
+%p Below is a list of #{!current_user_admin? ? 'your' : 'all'} OntoPortal Appliance licenses:
 = button_to "Create License for New Appliance", new_license_path, method: :get, class: "button button-blue"
 %table#licenses{"data-turbolinks" => "false", class: "table table-striped table-bordered detail", style: "width:100%"}
   %thead
@@ -26,38 +26,32 @@
     - for license in @licenses
       %tr{style: license.row_color.empty? ? "" : "background-color: #{license.row_color}"}
         - if current_user_admin?
+          %td= license.id
+          %td= license.bp_username
           %td
-            = license.id
-          %td
-            = license.bp_username
-          %td
-            = "#{license.first_name} #{license.last_name}"
+            = license.first_name
+            %br/
+            = license.last_name
         %td
-          %strong= link_to(license.appliance_id[0..7], license_path(license.id))
-          %br
-          %span{style: "font-size:75%; vertical-align:bottom;"}
+          %strong= link_to license.appliance_id.start_with?($LEGACY_APPLIANCE_ID) ? license.appliance_id[0..5] : license.appliance_id[0..7], license_path(license.id)
+          %br/
+          %span{style: "font-size:85%;"}
             - if current_user_admin? || license.approval_status === License.approval_statuses[:pending]
-              = link_to("Edit", edit_license_path(license.id))
+              = link_to "Edit", edit_license_path(license.id)
             - if current_user_admin?
               &nbsp;&nbsp;
               = link_to "Delete", license_path(license.id), method: :delete, data: { confirm: "Are you sure you want to completely destroy the license with ID: #{license.id}?" }
-        %td
-          = license.organization
-        %td
-          = license.project_info
-        %td
-          = license.reason
-        %td
-          = license.license_purpose.name
+        %td= license.organization
+        %td= license.project_info
+        %td= license.reason
+        %td= license.license_purpose.name
         %td
           - if license.license_key
             = link_to("Show", license_path(license.id))
           - else
-            Not&nbsp;generated
-        %td
-          = license.created_at.strftime("%m/%d/%Y\n%I:%M %p")
-        %td
-          = license.valid_date? ? license.valid_date.strftime('%m/%d/%Y') : ''
+            Not generated
+        %td= license.created_at.strftime("%m/%d/%Y\n%I:%M %p")
+        %td= license.valid_date? ? license.valid_date.strftime('%m/%d/%Y') : ''
         %td
           - if !current_user_admin? && license.approval_status === License.approval_statuses[:disapproved]
             :plain
