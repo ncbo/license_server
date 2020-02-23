@@ -12,7 +12,7 @@ $(document).ready(function () {
 });
 
 function renderTable() {
-  var licTable = $('#licenses').DataTable({
+  return $('#licenses').DataTable({
     "order": [],
     "stripeClasses": [],
     "dom": "<'row'" +
@@ -32,7 +32,6 @@ function renderTable() {
     }],
     "customAllowLicensesFilter": true
   });
-  return licTable;
 }
 
 $(".licenses.index").ready(function() {
