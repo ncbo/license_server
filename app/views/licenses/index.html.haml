@@ -4,7 +4,6 @@
   %div#success_message{class: "alert-box success"}
     = flash[:success]
 %p Below is a list of #{!current_user_admin? ? 'your' : 'all'} OntoPortal Appliance licenses:
-= button_to "Create License for New Appliance", new_license_path, method: :get, class: "button button-blue"
 %table#licenses{"data-turbolinks" => "false", class: "table table-striped table-bordered detail", style: "width:100%"}
   %thead
     %tr
@@ -25,7 +24,7 @@
       %th.no-sort Actions
   %tbody
     - for license in @licenses
-      %tr{style: license.row_color.empty? ? "" : "background-color: #{license.row_color}"}
+      %tr{style: license.row_color.empty? ? "" : "background-color: #{license.row_color}", class: license.latest ? "latest" : "past"}
         - if current_user_admin?
           %td= license.id
         %td

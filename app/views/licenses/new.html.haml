@@ -1,4 +1,5 @@
 - @title = "Create New License"
 %h1 #{params[:title] ? params[:title].humanize << " (Create New)" : "Create New"} License
+%p The Appliance ID is obtained by logging into the Admin console of your OntoPortal Appliance instance.
 = form_for :license, url: {action: "create"}, html: {method: :post, id: "license_form", class: "main-form"} do |f|
   = render partial: 'form', locals: { f: f, action: "Create" }

@@ -1,3 +1,9 @@
+var latestOnly = false;
+
+function toggleShow(val) {
+  latestOnly = val;
+}
+
 $(document).ready(function () {
   $("#copy-button").click(function() {
     copyToClipboard(document.getElementById("license-key"));
@@ -9,18 +15,65 @@ function renderTable() {
   var licTable = $('#licenses').DataTable({
     "order": [],
     "stripeClasses": [],
+    "dom": "<'row'" +
+      "<'col-sm-12 col-md-5'<'new-license-button-span'>>" +
+      "<'col-sm-12 col-md-2'l>" +
+      "<'col-sm-12 col-md-2'<'show-license-toggle'>>" +
+      "<'col-sm-12 col-md-3'f>>" +
+      "<'row'" +
+      "<'col-sm-12'tr>>" +
+      "<'row'" +
+      "<'col-sm-12 col-md-5'i>" +
+      "<'col-sm-12 col-md-7'p>>",
     columnDefs: [{
       targets: 'no-sort',
       orderable: false,
       searchable: false
-    }]
+    }],
+    "customAllowLicensesFilter": true
   });
+  return licTable;
 }
 
 $(".licenses.index").ready(function() {
   // display licenses table on load
-  renderTable();
+  licTable = renderTable();
+  $("div.show-license-toggle").html('<span class="toggle-row-display">' + showLicensesToggleLinks(latestOnly) + '</span>');
+  $("div.new-license-button-span").html('<form class="button_to" method="get" action="/licenses/new"><input class="button button-blue" type="submit" value="Create License for New Appliance"></form>');
+  $(".toggle-row-display").on("click", "a", function() {
+    toggleShow(!latestOnly);
+    licTable.draw();
+    str = showLicensesToggleLinks(latestOnly);
+    $(".toggle-row-display").html(str);
+    return false;
+  });
+
+  // toggle between all and latest only licenses
+  $.fn.dataTable.ext.search.push(
+    function(settings, data, dataIndex) {
+      if (!settings.oInit.customAllowLicensesFilter) {
+        return true;
+      }
+      var row = settings.aoData[dataIndex].nTr;
+
+      if (!latestOnly || row.classList.contains("latest")) {
+        return true;
+      }
+      return false;
+    }
+  );
 });
+
+function showLicensesToggleLinks(latestOnly) {
+  var str = 'Show Licenses:&nbsp;&nbsp;&nbsp;';
+
+  if (latestOnly) {
+    str += '<a id="showAllLicensesAction" href="javascript:;">All</a>&nbsp;&nbsp;|&nbsp;&nbsp;<strong>Latest</strong>';
+  } else {
+    str += '<strong>All</strong>&nbsp;&nbsp;|&nbsp;&nbsp;<a id="showLatestLicensesAction" href="javascript:;">Latest</a>';
+  }
+  return str;
+}
 
 function copyToClipboard(elem) {
   // create hidden text element, if it doesn't already exist
