@@ -1,9 +1,3 @@
-var latestOnly = false;
-
-function toggleShow(val) {
-  latestOnly = val;
-}
-
 $(document).ready(function () {
   $("#copy-button").click(function() {
     copyToClipboard(document.getElementById("license-key"));
@@ -12,17 +6,7 @@ $(document).ready(function () {
 });
 
 $(".licenses.index").ready(function() {
-  // display licenses table on load
-  licTable = renderTable();
-  $("div.show-license-toggle").html('<span class="toggle-row-display">' + showLicensesToggleLinks(latestOnly) + '</span>');
-  $("div.new-license-button-span").html('<form class="button_to" method="get" action="/licenses/new"><input class="button button-blue" type="submit" value="Create License for New Appliance"></form>');
-  $(".toggle-row-display").on("click", "a", function() {
-    toggleShow(!latestOnly);
-    licTable.draw();
-    str = showLicensesToggleLinks(latestOnly);
-    $(".toggle-row-display").html(str);
-    return false;
-  });
+  var latestOnly = (Cookies.get('licensesLatestOnly') === 'true');
 
   // toggle between all and latest only licenses
   $.fn.dataTable.ext.search.push(
@@ -31,12 +15,30 @@ $(".licenses.index").ready(function() {
       return !latestOnly || row.classList.contains("latest");
     }
   );
+
+  // display licenses table on load
+  licTable = renderTable();
+  $("div.show-license-toggle").html('<span class="toggle-row-display">' + showLicensesToggleLinks(latestOnly) + '</span>');
+  $("div.new-license-button-span").html('<form class="button_to" method="get" action="/licenses/new"><input class="button button-blue" type="submit" value="Create License for New Appliance"></form>');
+  $(".toggle-row-display").on("click", "a", function() {
+    latestOnly = toggleLatestOnly(latestOnly);
+    str = showLicensesToggleLinks(latestOnly);
+    $(".toggle-row-display").html(str);
+    licTable.draw();
+  });
 });
+
+function toggleLatestOnly(lo) {
+  lo = !lo;
+  Cookies.set('licensesLatestOnly', lo.toString());
+  return lo;
+}
 
 function renderTable() {
   return $('#licenses').DataTable({
     "order": [],
     "stripeClasses": [],
+    "stateSave": true,
     "dom": "<'row'" +
       "<'col-sm-12 col-md-5'<'new-license-button-span'>>" +
       "<'col-sm-12 col-md-2'l>" +
