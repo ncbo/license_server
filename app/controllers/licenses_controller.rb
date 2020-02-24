@@ -81,10 +81,12 @@ class LicensesController < ApplicationController
     else
       success = "New #{license_id_msg(@license)} has been successfully created."
       mail_user = helpers.current_user_admin? ? helpers.find_user_by_bp_username(@license.bp_username) : session[:user]
-      # notify user of application received
-      NotifierMailer.with(user: mail_user, license: @license).license_request_submitted.deliver_now
-      # notify admin of application received
-      NotifierMailer.with(license: @license).license_request_submitted_admin.deliver_now
+      # notify user of application received, but only if it's not yet approved,
+      # which can happen when an admin creates an application for someone else
+      NotifierMailer.with(user: mail_user, license: @license).license_request_submitted.deliver_now unless @license.approval_status === License.approval_statuses[:approved]
+      # notify admin of application received unless admin herself is the one
+      # creating the request for someone else
+      NotifierMailer.with(license: @license).license_request_submitted_admin.deliver_now unless helpers.current_user_admin?
 
       if @license.approval_status === License.approval_statuses[:approved]
         params[:id] = @license.id

@@ -11,6 +11,28 @@ $(document).ready(function () {
   });
 });
 
+$(".licenses.index").ready(function() {
+  // display licenses table on load
+  licTable = renderTable();
+  $("div.show-license-toggle").html('<span class="toggle-row-display">' + showLicensesToggleLinks(latestOnly) + '</span>');
+  $("div.new-license-button-span").html('<form class="button_to" method="get" action="/licenses/new"><input class="button button-blue" type="submit" value="Create License for New Appliance"></form>');
+  $(".toggle-row-display").on("click", "a", function() {
+    toggleShow(!latestOnly);
+    licTable.draw();
+    str = showLicensesToggleLinks(latestOnly);
+    $(".toggle-row-display").html(str);
+    return false;
+  });
+
+  // toggle between all and latest only licenses
+  $.fn.dataTable.ext.search.push(
+    function(settings, data, dataIndex) {
+      var row = settings.aoData[dataIndex].nTr;
+      return !latestOnly || row.classList.contains("latest");
+    }
+  );
+});
+
 function renderTable() {
   return $('#licenses').DataTable({
     "order": [],
@@ -29,42 +51,12 @@ function renderTable() {
       targets: 'no-sort',
       orderable: false,
       searchable: false
-    }],
-    "customAllowLicensesFilter": true
+    }]
   });
 }
 
-$(".licenses.index").ready(function() {
-  // display licenses table on load
-  licTable = renderTable();
-  $("div.show-license-toggle").html('<span class="toggle-row-display">' + showLicensesToggleLinks(latestOnly) + '</span>');
-  $("div.new-license-button-span").html('<form class="button_to" method="get" action="/licenses/new"><input class="button button-blue" type="submit" value="Create License for New Appliance"></form>');
-  $(".toggle-row-display").on("click", "a", function() {
-    toggleShow(!latestOnly);
-    licTable.draw();
-    str = showLicensesToggleLinks(latestOnly);
-    $(".toggle-row-display").html(str);
-    return false;
-  });
-
-  // toggle between all and latest only licenses
-  $.fn.dataTable.ext.search.push(
-    function(settings, data, dataIndex) {
-      if (!settings.oInit.customAllowLicensesFilter) {
-        return true;
-      }
-      var row = settings.aoData[dataIndex].nTr;
-
-      if (!latestOnly || row.classList.contains("latest")) {
-        return true;
-      }
-      return false;
-    }
-  );
-});
-
 function showLicensesToggleLinks(latestOnly) {
-  var str = 'Show Licenses:&nbsp;&nbsp;&nbsp;';
+  var str = 'Show Licenses:&nbsp;&nbsp;';
 
   if (latestOnly) {
     str += '<a id="showAllLicensesAction" href="javascript:;">All</a>&nbsp;&nbsp;|&nbsp;&nbsp;<strong>Latest</strong>';
