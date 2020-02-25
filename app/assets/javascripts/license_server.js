@@ -6,14 +6,19 @@ $(".licenses.show").ready(function () {
 });
 
 $(".licenses.edit").ready(function () {
-  $(".license-project-info-input, .license-reason-input").on("change keyup paste", function() {
+  $("input[type=text], select, textarea").on("change keyup paste", function() {
     var currentVal = $(this).val().trim();
-    var msg = $(this).attr('title');
 
-    if (!currentVal) {
-      this.setCustomValidity(msg);
+    if ($(this).prop('required') && !currentVal) {
+      var msg = $(this).attr('title');
+
+      if (msg) {
+        this.setCustomValidity(msg);
+      }
+      $(this).addClass('input-error');
     } else {
       this.setCustomValidity('');
+      $(this).removeClass('input-error');
     }
   });
 });
