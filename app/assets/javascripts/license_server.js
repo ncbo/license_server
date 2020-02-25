@@ -6,7 +6,7 @@ $(".licenses.show").ready(function () {
 });
 
 $(".licenses.edit").ready(function () {
-  $("input[type=text], select, textarea").on("change keyup paste", function() {
+  $("input[type=text], select, textarea").on("change blur", function() {
     var currentVal = $(this).val().trim();
 
     if ($(this).prop('required') && !currentVal) {
@@ -16,6 +16,7 @@ $(".licenses.edit").ready(function () {
         this.setCustomValidity(msg);
       }
       $(this).addClass('input-error');
+      $(this).val('');
     } else {
       this.setCustomValidity('');
       $(this).removeClass('input-error');
