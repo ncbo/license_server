@@ -8,20 +8,20 @@
         %td.top= @license.id
     %tr
       %th Appliance ID: *
-      %td.top= text_field :license, :appliance_id, value: @license.appliance_id, required: true, oninvalid: "this.setCustomValidity('Please enter a valid Appliance ID')", oninput: "this.setCustomValidity('')", class: "required"
+      %td.top= text_field :license, :appliance_id, value: @license.appliance_id, required: true, pattern: ".*\\S+.*", title: "This field cannot be empty", oninvalid: "this.setCustomValidity('Please enter a valid Appliance ID')", oninput: "this.setCustomValidity('')", class: "required"
     - if current_user_admin?
       %tr
         %th BioPortal Username: *
-        %td.top= text_field :license, :bp_username, value: @license.bp_username, required: true, oninvalid: "this.setCustomValidity(\"Please enter the user's BioPortal Username\")", oninput: "this.setCustomValidity('')", class: "required"
+        %td.top= text_field :license, :bp_username, value: @license.bp_username, required: true, pattern: ".*\\S+.*", title: "This field cannot be empty", oninvalid: "this.setCustomValidity(\"Please enter the user's BioPortal Username\")", oninput: "this.setCustomValidity('')", class: "required"
     %tr
       %th First Name: *
-      %td.top= text_field :license, :first_name, value: @license.first_name, required: true, oninvalid: "this.setCustomValidity('Please enter your first name')", oninput: "this.setCustomValidity('')", class: "required"
+      %td.top= text_field :license, :first_name, value: @license.first_name, required: true, pattern: ".*\\S+.*", title: "This field cannot be empty", oninvalid: "this.setCustomValidity('Please enter your first name')", oninput: "this.setCustomValidity('')", class: "required"
     %tr
       %th Last Name: *
-      %td.top= text_field :license, :last_name, value: @license.last_name, required: true, oninvalid: "this.setCustomValidity('Please enter your last name')", oninput: "this.setCustomValidity('')", class: "required"
+      %td.top= text_field :license, :last_name, value: @license.last_name, required: true, pattern: ".*\\S+.*", title: "This field cannot be empty", oninvalid: "this.setCustomValidity('Please enter your last name')", oninput: "this.setCustomValidity('')", class: "required"
     %tr
       %th Organization: *
-      %td.top= text_field :license, :organization, value: @license.organization, required: true, oninvalid: "this.setCustomValidity('Please enter the name of your organization or company')", oninput: "this.setCustomValidity('')", class: "required"
+      %td.top= text_field :license, :organization, value: @license.organization, required: true, pattern: ".*\\S+.*", title: "This field cannot be empty", oninvalid: "this.setCustomValidity('Please enter the name of your organization or company')", oninput: "this.setCustomValidity('')", class: "required"
     %tr
       %th Project Purpose: *
       %td= select :license, :license_purpose_id, @license_purposes.map {|lic| [lic.name, lic.id]}, {include_blank: 'Please Select:'}, required: true, oninvalid: "this.setCustomValidity('Please select your purpose from the list')", oninput: "this.setCustomValidity('')", class: "required"
@@ -31,10 +31,10 @@
         %td= select :license, :approval_status, License.approval_statuses.map {|k, v| [v.humanize, k]}, {include_blank: 'Please Select:'}, required: true, oninvalid: "this.setCustomValidity('Please select the approval status')", oninput: "this.setCustomValidity('')", class: "required"
     %tr
       %th Project Information: *
-      %td= text_area :license, :project_info, value: @license.project_info, rows: 6, required: true, oninvalid: "this.setCustomValidity('Please include some information about your project')", oninput: "this.setCustomValidity('')", class: "required"
+      %td= text_area :license, :project_info, value: @license.project_info, rows: 6, required: true, title: "Please include some information about your project", oninvalid: "this.setCustomValidity('Please include some information about your project')", oninput: "this.setCustomValidity('')", class: "required license-project-info-input"
     %tr
       %th Reason for Needing Appliance: *
-      %td= text_area :license, :reason, value: @license.reason, rows: 6, required: true, oninvalid: "this.setCustomValidity('Please describe your reason for needing an appliance')", oninput: "this.setCustomValidity('')", class: "required"
+      %td= text_area :license, :reason, value: @license.reason, rows: 6, required: true, title: "Please describe your reason for needing an appliance", oninvalid: "this.setCustomValidity('Please describe your reason for needing an appliance')", oninput: "this.setCustomValidity('')", class: "required license-reason-input"
     - if current_user_admin?
       %tr
         %th Identification:

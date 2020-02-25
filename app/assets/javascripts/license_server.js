@@ -5,6 +5,19 @@ $(".licenses.show").ready(function () {
   });
 });
 
+$(".licenses.edit").ready(function () {
+  $(".license-project-info-input, .license-reason-input").on("change keyup paste", function() {
+    var currentVal = $(this).val().trim();
+    var msg = $(this).attr('title');
+
+    if (!currentVal) {
+      this.setCustomValidity(msg);
+    } else {
+      this.setCustomValidity('');
+    }
+  });
+});
+
 $(".licenses.index").ready(function() {
   var latestOnly = (Cookies.get('licensesLatestOnly') === 'true');
 
@@ -49,7 +62,7 @@ function renderTable() {
       "<'row'" +
       "<'col-sm-12 col-md-5'i>" +
       "<'col-sm-12 col-md-7'p>>",
-    columnDefs: [{
+    "columnDefs": [{
       targets: 'no-sort',
       orderable: false,
       searchable: false
@@ -73,6 +86,7 @@ function copyToClipboard(elem) {
   var targetId = "_hiddenCopyText_";
   var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
   var origSelectionStart, origSelectionEnd;
+
   if (isInput) {
     // can just use the original source element for the selection and copy
     target = elem;
@@ -81,6 +95,7 @@ function copyToClipboard(elem) {
   } else {
     // must use a temporary form element for the selection and copy
     target = document.getElementById(targetId);
+
     if (!target) {
       var target = document.createElement("textarea");
       target.style.position = "absolute";
@@ -98,11 +113,13 @@ function copyToClipboard(elem) {
 
   // copy the selection
   var succeed;
+
   try {
     succeed = document.execCommand("copy");
   } catch(e) {
     succeed = false;
   }
+
   // restore original focus
   if (currentFocus && typeof currentFocus.focus === "function") {
     currentFocus.focus();
