@@ -5,24 +5,60 @@ $(".licenses.show").ready(function () {
   });
 });
 
-$(".licenses.edit").ready(function () {
-  $("input[type=text], select, textarea").on("change blur", function() {
-    var currentVal = $(this).val().trim();
+// $(".licenses.edit").ready(function () {
+  // $('#license_form').on('submit', function(e) {
+  //   // e.preventDefault();  //prevent form from submitting
+  //   var valid = true;
+  //   // var data = $("#license_form :input[type=text], #license_form textarea").serializeArray();
+  //   // var data = $("#" + this.id + " :input[type=text], #" + this.id + " textarea, #" + this.id + " select");
+  //   var submitId = $("input[type=submit][clicked=true], button[type=submit][clicked=true]").attr('id');
+  //
+  //   if (submitId === 'cancel') {
+  //     return valid;
+  //   }
+  //
+  //   $('#' + this.id + ' *').filter(':input[type=text], select, textarea').each(function() {
+  //     var currentVal = $(this).val().trim();
+  //
+  //     if ($(this).prop('required') && !currentVal) {
+  //       valid = false;
+  //       var msg = $(this).attr('title');
+  //
+  //       if (msg) {
+  //         this.setCustomValidity(msg);
+  //       }
+  //       $(this).addClass('input-error');
+  //       $(this).val('');
+  //     } else {
+  //       this.setCustomValidity('');
+  //       $(this).removeClass('input-error');
+  //     }
+  //   });
+  //   return valid;
+  // });
+  //
+  // $("#license_form input[type=submit], #license_form button[type=submit]").click(function() {
+  //   $("input[type=submit], button[type=submit]", $(this).parents("form")).removeAttr("clicked");
+  //   $(this).attr("clicked", "true");
+  // });
 
-    if ($(this).prop('required') && !currentVal) {
-      var msg = $(this).attr('title');
-
-      if (msg) {
-        this.setCustomValidity(msg);
-      }
-      $(this).addClass('input-error');
-      $(this).val('');
-    } else {
-      this.setCustomValidity('');
-      $(this).removeClass('input-error');
-    }
-  });
-});
+  // $("input[type=text], select, textarea").on("change blur", function() {
+  //   var currentVal = $(this).val().trim();
+  //
+  //   if ($(this).prop('required') && !currentVal) {
+  //     var msg = $(this).attr('title');
+  //
+  //     if (msg) {
+  //       this.setCustomValidity(msg);
+  //     }
+  //     $(this).addClass('input-error');
+  //     $(this).val('');
+  //   } else {
+  //     this.setCustomValidity('');
+  //     $(this).removeClass('input-error');
+  //   }
+  // });
+// });
 
 $(".licenses.index").ready(function() {
   var latestOnly = (Cookies.get('licensesLatestOnly') === 'true');
@@ -46,6 +82,23 @@ $(".licenses.index").ready(function() {
     licTable.draw();
   });
 });
+
+function setCustomValidityOverride(elem) {
+  var currentVal = $(elem).val().trim();
+
+  if ($(elem).prop('required') && !currentVal) {
+    var msg = $(elem).attr('title');
+
+    if (msg) {
+      elem.setCustomValidity(msg);
+    }
+    $(elem).addClass('input-error');
+    $(elem).val('');
+  } else {
+    elem.setCustomValidity('');
+    $(elem).removeClass('input-error');
+  }
+}
 
 function toggleLatestOnly(lo) {
   lo = !lo;
