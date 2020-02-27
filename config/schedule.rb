@@ -19,6 +19,6 @@
 
 # Learn more: http://github.com/javan/whenever
 
-every 1.day, at: '10:30 am' do
-  runner "MyModel.task_to_run_at_four_thirty_in_the_morning"
+every "#{$LICENSE_TO_EXPIRE_NOTIFICATION_CRON}" do
+  rake 'batch:send_licence_to_expire_notifications'
 end

@@ -1,5 +1,5 @@
 <p>Dear <%= @license.first_name %>,</p>
-<p>This is a courtesy reminder that your license for Appliance ID: <%= @license.appliance_id %> expires after <span style="color:#ba3329;font-weight:bold"><%= @license.valid_date.strftime('%A, %B %d, %Y') %></span>. Once the license is expired, your OntoPortal Appliance will cease to operate.</p>
+<p>This is a courtesy reminder that your OntoPortal license for Appliance ID: <%= @license.appliance_id %> expires after <span style="color:#ba3329;font-weight:bold"><%= @license.valid_date.strftime('%A, %B %d, %Y') %></span>. Once the license is expired, your OntoPortal Appliance will cease to operate.</p>
 <p>Please follow the link below to our license server to apply for a new license:<br/><br/>
   <a href="<%= root_url %>"><%= root_url %></a><br/><br/>
   Note that the approval process normally takes 24 to 48 hours, so please apply at your earliest opportunity.</p>

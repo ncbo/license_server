@@ -13,7 +13,7 @@ class License < ApplicationRecord
   end
 
   def self.latest_licenses(status = :any, *filters)
-    sql = "SELECT a.* FROM licenses a INNER JOIN (SELECT MAX(id) AS id FROM licenses GROUP BY appliance_id) b ON a.id = b.id"
+    sql = "SELECT a.* FROM licenses a INNER JOIN (SELECT MAX(id) AS id FROM licenses GROUP BY appliance_id) b ON a.id = b.id WHERE 1=1"
     sql << " AND a.approval_status = '#{status}'" unless status === :any
     sql << " AND a.valid_date IS NOT NULL" if status === self.approval_statuses[:approved]
 
@@ -22,6 +22,6 @@ class License < ApplicationRecord
     end
 
     sql << " ORDER BY a.id"
-    self.connection.select_all(sql).to_a
+    self.find_by_sql(sql)
   end
 end

@@ -1,5 +1,4 @@
 class NotifierMailer < ApplicationMailer
-
   def license_request_submitted
     @license = params[:license]
     mail(to: params[:user].email, subject: "License Request for Appliance ID: #{@license.appliance_id} Received")
@@ -24,5 +23,4 @@ class NotifierMailer < ApplicationMailer
     @license = params[:license]
     mail(to: params[:user].email, subject: "License for Appliance ID: #{@license.appliance_id} Expires Soon")
   end
-
 end
