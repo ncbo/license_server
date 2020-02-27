@@ -36,7 +36,8 @@ class LoginController < ApplicationController
         redirect_to redirect
       else
         error = OpenStruct.new login_invalid: "Invalid username/password combination"
-        @errors = Hash[:error, OpenStruct.new(user_username: error)]
+        dummy_error = OpenStruct.new password_invalid: ""
+        @errors = Hash[:error, OpenStruct.new(user_username: error, user_password: dummy_error)]
         render action: 'index'
       end
     else
