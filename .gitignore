@@ -27,7 +27,7 @@ config/deploy/*
 /public/umls/*
 /public/assets/
 
-keys/private.pem
+config/keys/private.pem
 data
 .ruby-version
 

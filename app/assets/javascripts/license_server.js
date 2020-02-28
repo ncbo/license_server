@@ -5,25 +5,6 @@ $(".licenses.show").ready(function () {
   });
 });
 
-$(".licenses.edit").ready(function () {
-  $("input[type=text], select, textarea").on("change blur", function() {
-    var currentVal = $(this).val().trim();
-
-    if ($(this).prop('required') && !currentVal) {
-      var msg = $(this).attr('title');
-
-      if (msg) {
-        this.setCustomValidity(msg);
-      }
-      $(this).addClass('input-error');
-      $(this).val('');
-    } else {
-      this.setCustomValidity('');
-      $(this).removeClass('input-error');
-    }
-  });
-});
-
 $(".licenses.index").ready(function() {
   var latestOnly = (Cookies.get('licensesLatestOnly') === 'true');
 
@@ -46,6 +27,23 @@ $(".licenses.index").ready(function() {
     licTable.draw();
   });
 });
+
+function setCustomValidityOverride(elem) {
+  var currentVal = $(elem).val().trim();
+
+  if ($(elem).prop('required') && !currentVal) {
+    var msg = $(elem).attr('title');
+
+    if (msg) {
+      elem.setCustomValidity(msg);
+    }
+    $(elem).addClass('input-error');
+    $(elem).val('');
+  } else {
+    elem.setCustomValidity('');
+    $(elem).removeClass('input-error');
+  }
+}
 
 function toggleLatestOnly(lo) {
   lo = !lo;
