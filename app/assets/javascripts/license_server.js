@@ -75,7 +75,7 @@ function renderTable() {
 }
 
 function showLicensesToggleLinks(latestOnly) {
-  var str = 'Show Licenses:&nbsp;&nbsp;';
+  var str = 'Show:&nbsp;&nbsp;';
 
   if (latestOnly) {
     str += '<a id="showAllLicensesAction" href="javascript:;">All</a>&nbsp;&nbsp;|&nbsp;&nbsp;<strong>Latest</strong>';

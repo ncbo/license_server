@@ -33,6 +33,7 @@ gem 'haml'
 gem 'dalli'
 gem 'uuid'
 gem 'chroma'
+gem 'activerecord-import', require: false
 gem 'whenever', require: false
 
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks

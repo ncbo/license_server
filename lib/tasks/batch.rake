@@ -1,5 +1,6 @@
 require "#{Rails.root}/app/helpers/application_helper"
-include ApplicationHelper
+require 'csv'
+require 'activerecord-import'
 
 namespace :batch do
   desc "Rake job for batch operations"
@@ -17,4 +18,9 @@ namespace :batch do
     end
   end
 
+  task import_initial_data: :environment do
+    items = []
+    CSV.open('data/ncbo_virtual_appliance_data.csv', 'r:bom|utf-8', headers: true) { |csv| csv.each { |row| items << row.to_h } }
+    License.import(items)
+  end
 end
