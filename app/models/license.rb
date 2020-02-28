@@ -5,8 +5,7 @@ class License < ApplicationRecord
       pending: "pending"
   }
   belongs_to :license_purpose
-  attr_accessor :latest
-  attr_accessor :row_color
+  attr_accessor :latest, :row_color
 
   def expired?()
     self.valid_date && self.valid_date.to_date < Date.today

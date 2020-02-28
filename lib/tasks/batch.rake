@@ -12,6 +12,8 @@ namespace :batch do
     licenses.each do |license|
       mail_user = find_user_by_bp_username(license.bp_username)
       NotifierMailer.with(user: mail_user, license: license).license_to_expire.deliver_now if mail_user
+      license.expiration_reminder_sent = true
+      license.save
     end
   end
 

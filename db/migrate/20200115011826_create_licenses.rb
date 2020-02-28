@@ -13,14 +13,17 @@ class CreateLicenses < ActiveRecord::Migration[5.1]
       t.string :appliance_id, null: false
       t.string :license_key, limit: 1024
       t.date :valid_date
+      t.boolean :expiration_reminder_sent, default: false, null: false
 
       t.timestamps
     end
     add_index :licenses, :bp_username
     add_index :licenses, :appliance_id
+    add_index :licenses, :expiration_reminder_sent
   end
 
   def down
+    remove_index :licenses, :expiration_reminder_sent
     remove_index :licenses, :appliance_id
     remove_index :licenses, :bp_username
     drop_table :licenses

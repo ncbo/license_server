@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 20200121230018) do
     t.string "appliance_id", null: false
     t.string "license_key", limit: 1024
     t.date "valid_date"
+    t.boolean "expiration_reminder_sent", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "approval_status", limit: 11, default: "pending", null: false
@@ -37,6 +38,7 @@ ActiveRecord::Schema.define(version: 20200121230018) do
     t.index ["appliance_id"], name: "index_licenses_on_appliance_id"
     t.index ["approval_status"], name: "index_licenses_on_approval_status"
     t.index ["bp_username"], name: "index_licenses_on_bp_username"
+    t.index ["expiration_reminder_sent"], name: "index_licenses_on_expiration_reminder_sent"
     t.index ["license_purpose_id"], name: "fk_rails_7a164d2de3"
   end
 
