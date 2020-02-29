@@ -1,28 +1,33 @@
 # README
 
-## Generating public/private keys
+## Generate public/private keys
 ```
 % openssl genrsa -out keys/private.pem 2048
 % openssl rsa -in keys/private.pem -out keys/public.pem -outform PEM -pubout
 ```
 
-## Creating and initializing database
+## Create and initialize database
 ```
 % rails db:create
 % rails db:migrate
 % rails db:seed
 ```
 
-## Removing database
+## Import initial data
 ```
-% rails db:migrate VERSION=0
-% rails db:drop
+% rails batch:import_initial_data
 ```
 
 ## Setup crontab
 ```
+% whenever task: bundle exec whenever --clear-crontab
 % bundle exec whenever --update-crontab --set environment='production'
 % crontab -l
 ```
 
+## If you ever need to remove the database
+```
+% rails db:migrate VERSION=0
+% rails db:drop
+```
 
