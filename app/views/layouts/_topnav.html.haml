@@ -2,9 +2,8 @@
   = link_to image_tag("logos/op-lic-server-logo.png"), root_path(), class: "navbar-brand"
   = button_tag type: "button", class: "navbar-toggler", data: {toggle: "collapse", target: "#topNavigationToggler"}, aria: {controls: "topNavigationToggler", expanded: "false", label: "Toggle navigation"} do
     %span.navbar-toggler-icon
-  %div#topNavigationToggler.navbar-collapse.collapse.justify-content-between
-    %ul.navbar-nav
-    %ul.navbar-nav
+  %div#topNavigationToggler.navbar-collapse.collapse.w-100.order-3.dual-collapse2
+    %ul.navbar-nav.ml-auto
       - unless logged_in?
         %li.nav-item
           = link_to "Login", login_index_path(redirect: request.original_url), class: "btn btn-bp-login mr-md-2"
