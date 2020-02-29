@@ -53,15 +53,18 @@
           - else
             Not generated
         %td= license.created_at.strftime("%m/%d/%Y\n%I:%M %p")
-        %td= license.valid_date? ? license.valid_date.strftime('%m/%d/%Y') : ''
+        %td
+          = license.valid_date? ? license.valid_date.strftime('%m/%d/%Y') : ''
+          - if license.about_to_expire?
+            %span.error-msg (In #{(license.valid_date - Date.today).to_i} days)
+          - elsif license.expired?
+            %span.error-msg (Expired)
         %td
           - if !current_user_admin? && license.approval_status === License.approval_statuses[:disapproved]
             :plain
               Please email us at <a href='mailto:#{$SUPPORT_EMAIL}'>#{$SUPPORT_EMAIL}</a> for further instructions on getting your license key.
           - else
             = license.approval_status.humanize
-            - if license.expired?
-              %span.error-msg (Expired)
         %td
           - if license.latest && license.approval_status === License.approval_statuses[:approved]
             = button_to "Renew", renew_license_path(license.id), params: {title: "renew"}, method: :post, class: "button button-blue", style: "width:120px;"

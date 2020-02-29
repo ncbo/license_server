@@ -11,6 +11,11 @@ class License < ApplicationRecord
     self.valid_date && self.valid_date.to_date < Date.today
   end
 
+  def about_to_expire?()
+    cutoff_date = Date.today + $LICENCE_TO_EXPIRE_NUM_DAYS_ADVANCE
+    self.valid_date && self.valid_date.to_date >= Date.today && self.valid_date.to_date <= cutoff_date
+  end
+
   def self.latest_licenses(status = :any, *filters)
     sql = "SELECT a.* FROM licenses a INNER JOIN (SELECT MAX(id) AS id FROM licenses GROUP BY appliance_id) b ON a.id = b.id WHERE 1=1"
     sql << " AND a.approval_status = '#{status}'" unless status === :any
