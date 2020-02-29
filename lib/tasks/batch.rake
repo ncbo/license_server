@@ -2,6 +2,8 @@ require "#{Rails.root}/app/helpers/application_helper"
 require 'csv'
 require 'activerecord-import'
 
+include ApplicationHelper
+
 namespace :batch do
   desc "Rake job for batch operations"
 
