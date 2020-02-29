@@ -18,6 +18,7 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
+require_relative 'environment'
 
 every "#{$LICENSE_TO_EXPIRE_NOTIFICATION_CRON}" do
   rake 'batch:send_licence_to_expire_notifications'

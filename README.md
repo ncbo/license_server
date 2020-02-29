@@ -19,3 +19,10 @@
 % rails db:drop
 ```
 
+## Setup crontab
+```
+% bundle exec whenever --update-crontab --set environment='production'
+% crontab -l
+```
+
+
