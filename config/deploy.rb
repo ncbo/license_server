@@ -2,7 +2,7 @@
 lock "~> 3.12.0"
 
 set :application, "license_server"
-set :repo_url, "git@github.com:ncbo/license_server.git"
+set :repo_url, "git@github.com:ncbo/#{fetch(:application)}"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
@@ -45,7 +45,7 @@ set :bundle_flags, '--without development test --deployment'
 #set :passenger_restart_with_touch, false # Note that `nil` is NOT the same as `false` here
 #If you don't set `:passenger_restart_with_touch`, capistrano-passenger will check what version of passenger you are running
 #and use `passenger-config restart-app` if it is available in that version.
-set :passenger_restart_with_touch, true
+# set :passenger_restart_with_touch, false
 
 namespace :deploy do
 
