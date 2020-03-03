@@ -26,18 +26,20 @@ $CLIENT_REQUEST_CACHING = false
 $DEBUG_RUBY_CLIENT = false
 $DEBUG_RUBY_CLIENT_KEYS = []
 
-$SUPPORT_EMAIL = "support@example.com"
-$ADMIN_EMAIL = "admin@example.com"
-
 # CRON schedule for "license is about to expire" notifications
 # default: daily at 10:30am
 $LICENSE_TO_EXPIRE_NOTIFICATION_CRON = '30 10 * * *'
 # Number of days prior to license expiration to send notification
 $LICENCE_TO_EXPIRE_NUM_DAYS_ADVANCE = 15
 
+$SUPPORT_EMAIL = "support@example.com"
+$ADMIN_EMAIL = "admin@example.com"
+$EMAIL_SENDER = "admin@example.com"
+$EMAIL_OVERRIDE = "developers@example.com" # All email is sent here in :staging environment
+
 # SMTP settings
 ActionMailer::Base.smtp_settings = {
     :address  => 'smtp.example.com', # smtp server address, ex: smtp.example.com
     :port  => 25, # smtp server port
-    :domain  => 'rails.domain.com', # fqdn of rails server, ex: rails.domain.com
+    :domain  => 'rails.example.com', # fqdn of rails server, ex: rails.example.com
 }
