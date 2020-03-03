@@ -60,7 +60,7 @@
           (Expires in #{(@license.valid_date - Date.today).to_i}
           - if @license.expiration_reminder_sent
             :plain
-              days. User has been notified.)
+              days. User has been notified)
           - else
             :plain
               days)
