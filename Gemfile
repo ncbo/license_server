@@ -59,9 +59,9 @@ end
 
 group :deployment, :development do
   #capistrano deployment
-  gem "capistrano", "~> 3.12", require: false
-  gem "capistrano-rails", "~> 1.4", require: false
-  gem "capistrano-passenger", require: false
+  gem 'capistrano', '~> 3.12', require: false
+  gem 'capistrano-rails', '~> 1.4', require: false
+  gem 'capistrano-passenger', require: false
   gem 'capistrano-rails-db', require: false
 end
 
