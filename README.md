@@ -15,13 +15,13 @@
 
 ## Import initial data
 ```
-% rails batch:import_initial_data
+% RAILS_ENV=production bundle exec rake batch:import_initial_data
 ```
 
 ## Setup crontab
 ```
 % whenever task: bundle exec whenever --clear-crontab
-% bundle exec whenever --update-crontab --set environment='production'
+% RAILS_ENV=production bundle exec whenever--update-crontab --set environment='production'
 % crontab -l
 ```
 
