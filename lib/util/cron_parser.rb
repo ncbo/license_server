@@ -13,13 +13,13 @@ module CronParser
 
     def to_cron_s
       [
-          @seconds == [ 0 ] ? nil : (@seconds || [ '*' ]).join(','),
-          (@minutes || [ '*' ]).join(','),
-          (@hours || [ '*' ]).join(','),
-          (@monthdays || [ '*' ]).join(','),
-          (@months || [ '*' ]).join(','),
-          (@weekdays || [ [ '*' ] ]).map { |d| d.compact.join('#') }.join(','),
-          @timezone ? @timezone.name : nil
+        @seconds == [ 0 ] ? nil : (@seconds || [ '*' ]).join(','),
+        (@minutes || [ '*' ]).join(','),
+        (@hours || [ '*' ]).join(','),
+        (@monthdays || [ '*' ]).join(','),
+        (@months || [ '*' ]).join(','),
+        (@weekdays || [ [ '*' ] ]).map { |d| d.compact.join('#') }.join(','),
+        @timezone ? @timezone.name : nil
       ].compact.join(' ')
     end
   end
