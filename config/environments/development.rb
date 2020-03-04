@@ -67,7 +67,7 @@ Rails.application.configure do
   require Rails.root.join('config', "license_server_config_#{Rails.env}.rb")
 
   config.action_mailer.default_options = {
-      from: $SUPPORT_EMAIL
+      from: $EMAIL_SENDER
   }
 
   config.action_mailer.default_url_options = {
