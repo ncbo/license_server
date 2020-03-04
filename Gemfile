@@ -33,6 +33,9 @@ gem 'haml'
 gem 'dalli'
 gem 'uuid'
 gem 'chroma'
+gem 'ruby-xxHash'
+gem 'fugit'
+
 gem 'activerecord-import', require: false
 gem 'whenever', require: false
 

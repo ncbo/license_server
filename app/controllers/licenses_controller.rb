@@ -14,6 +14,42 @@ class LicensesController < ApplicationController
   def index
     render_licenses
     render action: :index
+
+
+    text1 = "ncboprod-ui1.stanford.edu"
+    text2 = "ncboprod-ui1"
+    text3 = "a"
+    text4 = "when we were young, we lived to the fullest"
+    text5 = "ncboprod-ui2.stanford.edu"
+    text6 = Socket.gethostname
+    seed = 1212
+    puts "*****************************"
+    puts "Seed: #{seed}"
+    puts "'#{text1}':\n#{CronParser::Cron.minutes_from_string(text1)}"
+    puts "'#{text2}':\n#{CronParser::Cron.minutes_from_string(text2)}"
+    puts "'#{text3}':\n#{CronParser::Cron.minutes_from_string(text3)}"
+    puts "'#{text4}':\n#{CronParser::Cron.minutes_from_string(text4)}"
+    puts "'#{text5}':\n#{CronParser::Cron.minutes_from_string(text5)}"
+    puts "'#{text6}':\n#{CronParser::Cron.minutes_from_string(text6)}"
+    puts "*****************************"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    fg1 = CronParser::Cron.parse('30 10 * * *')
+    binding.pry
+
   end
 
   def new
