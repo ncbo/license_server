@@ -47,8 +47,9 @@ set :bundle_flags, '--without development test --deployment'
 #and use `passenger-config restart-app` if it is available in that version.
 # set :passenger_restart_with_touch, false
 
-# set up cron tab on all application servers(instead of default :db role)
-set :whenever_roles, { :app }
+# set up crontab on all application servers(instead of default :db role); remove this setting for
+# installing up crontab job only on one node
+set :whenever_roles,  [ :app ]
 
 namespace :deploy do
 
