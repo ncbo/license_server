@@ -1,3 +1,5 @@
+require 'ruby-xxhash'
+
 module CronParser
   class Cron < Fugit::Cron
     attr_writer(:seconds, :minutes, :hours, :monthdays, :months, :weekdays, :timezone)
@@ -17,4 +19,3 @@ module CronParser
     end
   end
 end
-
