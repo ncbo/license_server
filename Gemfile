@@ -37,7 +37,7 @@ gem 'ruby-xxHash'
 gem 'fugit'
 
 gem 'activerecord-import', require: false
-gem 'whenever', require: false
+gem 'whenever', group: :deployment, require: false
 
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
@@ -60,6 +60,7 @@ group :development, :test do
   gem 'selenium-webdriver'
 end
 
+# deployment group for jenkins/capistrano deployments
 group :deployment, :development do
   #capistrano deployment
   gem 'capistrano', '~> 3.12', require: false
