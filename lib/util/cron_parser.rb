@@ -12,15 +12,8 @@ module CronParser
     end
 
     def to_cron_s
-      [
-        @seconds == [ 0 ] ? nil : (@seconds || [ '*' ]).join(','),
-        (@minutes || [ '*' ]).join(','),
-        (@hours || [ '*' ]).join(','),
-        (@monthdays || [ '*' ]).join(','),
-        (@months || [ '*' ]).join(','),
-        (@weekdays || [ [ '*' ] ]).map { |d| d.compact.join('#') }.join(','),
-        @timezone ? @timezone.name : nil
-      ].compact.join(' ')
+      remove_instance_variable(:@cron_s)
+      super
     end
   end
 end

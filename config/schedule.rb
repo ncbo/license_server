@@ -20,6 +20,11 @@
 # Learn more: http://github.com/javan/whenever
 require_relative 'environment'
 
-every "#{$LICENSE_TO_EXPIRE_NOTIFICATION_CRON}" do
+minutes = CronParser::Cron.minutes_from_string(Rails.configuration.cron_seed).to_s
+cron_parser = CronParser::Cron.parse($LICENSE_TO_EXPIRE_NOTIFICATION_CRON)
+cron_parser.minutes = [minutes] if minutes && !minutes.empty?
+cron_exp = cron_parser.to_cron_s
+
+every "#{cron_exp}" do
   rake 'batch:send_licence_to_expire_notifications'
 end

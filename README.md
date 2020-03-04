@@ -21,7 +21,7 @@
 ## Setup crontab
 ```
 % whenever task: bundle exec whenever --clear-crontab
-% RAILS_ENV=production bundle exec whenever--update-crontab --set environment='production'
+% RAILS_ENV=production bundle exec whenever --update-crontab --set environment='production'
 % crontab -l
 ```
 

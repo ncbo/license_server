@@ -74,4 +74,5 @@ Rails.application.configure do
       host: $LICENSE_SERVER_HOST
   }
 
+  config.cron_seed = SecureRandom.uuid
 end
