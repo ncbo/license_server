@@ -31,6 +31,7 @@ class LoginController < ApplicationController
 
         if session[:redirect]
           redirect = CGI.unescape(session[:redirect])
+          session.delete(:redirect)
         end
 
         redirect_to redirect
