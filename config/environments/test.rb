@@ -47,6 +47,4 @@ Rails.application.configure do
   config.action_mailer.default_url_options = {
       host: $LICENSE_SERVER_HOST
   }
-
-  config.cron_seed = SecureRandom.uuid
 end

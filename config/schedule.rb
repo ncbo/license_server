@@ -20,11 +20,24 @@
 # Learn more: http://github.com/javan/whenever
 require_relative 'environment'
 
-minutes = CronParser::Cron.minutes_from_string(Rails.configuration.cron_seed).to_s
+set :job_template, "bash -c ':job'" if Rails.env.development?
+
+log_path = Rails.root.join('log', "crontab_#{Rails.env}.log")
+logger = ActiveSupport::Logger.new(log_path)
+logger.datetime_format = "%Y-%m-%d %H:%M:%S"
+
+set :output, "#{log_path}"
+env :PATH, ENV['PATH']
+
+cron_seed = SecureRandom.uuid
+minutes = CronParser::Cron.minutes_from_string(cron_seed).to_s
 cron_parser = CronParser::Cron.parse($LICENSE_TO_EXPIRE_NOTIFICATION_CRON)
 cron_parser.minutes = [minutes] if minutes && !minutes.empty?
 cron_exp = cron_parser.to_cron_s
 
+job1 = 'batch:send_licence_to_expire_notifications'
+logger.info "Generated a CRON job for '#{job1}' with schedule: '#{cron_exp}'"
+
 every "#{cron_exp}" do
-  rake 'batch:send_licence_to_expire_notifications'
+  rake job1
 end

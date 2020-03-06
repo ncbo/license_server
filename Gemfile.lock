@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/ncbo/ontologies_api_ruby_client.git
-  revision: 3dd2edb0dd06dfdcca8829240c2a775ae790f04f
+  revision: 0100111449640885b1cbd66cef09c9ec903451cd
   branch: staging
   specs:
     ontologies_api_client (1.0.0)
@@ -107,7 +107,7 @@ GEM
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     erubi (1.9.0)
-    et-orbi (1.2.2)
+    et-orbi (1.2.3)
       tzinfo
     excon (0.72.0)
     execjs (2.7.0)
