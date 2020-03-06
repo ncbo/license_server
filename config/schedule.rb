@@ -20,13 +20,11 @@
 # Learn more: http://github.com/javan/whenever
 require_relative 'environment'
 
-set :job_template, "bash -c ':job'" if Rails.env.development?
-
 log_path = Rails.root.join('log', "crontab_#{Rails.env}.log")
+set :output, "#{log_path}"
 logger = ActiveSupport::Logger.new(log_path)
 logger.datetime_format = "%Y-%m-%d %H:%M:%S"
 
-set :output, "#{log_path}"
 env :PATH, ENV['PATH']
 
 cron_seed = SecureRandom.uuid
