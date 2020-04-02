@@ -11,6 +11,7 @@ $(".licenses.index").ready(function() {
   // toggle between all and latest only licenses
   $.fn.dataTable.ext.search.push(
     function(settings, data, dataIndex) {
+      latestOnly = (Cookies.get('licensesLatestOnly') === 'true');
       var row = settings.aoData[dataIndex].nTr;
       return !latestOnly || row.classList.contains("latest");
     }
