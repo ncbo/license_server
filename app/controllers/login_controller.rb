@@ -25,7 +25,7 @@ class LoginController < ApplicationController
     unless @errors[:error]
       logged_in_user = LinkedData::Client::Models::User.authenticate(params[:user][:username], params[:user][:password])
 
-      if logged_in_user && !logged_in_user.errors && !logged_in_user.error
+      if logged_in_user&.apikey && !logged_in_user.errors && !logged_in_user.error
         login(logged_in_user)
         redirect = licenses_path
 
