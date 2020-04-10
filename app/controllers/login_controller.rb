@@ -25,7 +25,7 @@ class LoginController < ApplicationController
     unless @errors[:error]
       logged_in_user = LinkedData::Client::Models::User.authenticate(params[:user][:username], params[:user][:password])
 
-      if logged_in_user && !logged_in_user.errors
+      if logged_in_user && !logged_in_user.errors && !logged_in_user.error
         login(logged_in_user)
         redirect = licenses_path
 
@@ -36,7 +36,14 @@ class LoginController < ApplicationController
 
         redirect_to redirect
       else
-        error = OpenStruct.new login_invalid: "Invalid username/password combination"
+        error_msg = "Invalid username/password combination"
+
+        if logged_in_user.errors
+          error_msg = logged_in_user.errors[0]
+        elsif logged_in_user.error
+          error_msg = logged_in_user.error
+        end
+        error = OpenStruct.new login_invalid: error_msg
         dummy_error = OpenStruct.new password_invalid: ""
         @errors = Hash[:error, OpenStruct.new(user_username: error, user_password: dummy_error)]
         render action: 'index'
