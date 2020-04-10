@@ -1,5 +1,5 @@
 # config valid for current version and patch releases of Capistrano
-lock "~> 3.12.0"
+#lock "~> 3.12.0"
 
 set :application, "license_server"
 set :repo_url, "git@github.com:ncbo/#{fetch(:application)}"
@@ -24,7 +24,7 @@ set :deploy_to, "/srv/rails/#{fetch(:application)}"
 # append :linked_files, "config/database.yml"
 
 # Default value for linked_dirs is []
-set :linked_dirs, %w{bin log tmp/pids tmp/cache public/system public/assets}
+set :linked_dirs, %w{log tmp/pids tmp/cache public/system public/assets}
 # append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
 
 # Default value for default_env is {}
