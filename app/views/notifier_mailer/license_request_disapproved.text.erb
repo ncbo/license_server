@@ -1,8 +1,8 @@
 Dear <%= @license.first_name %>,
 
-Your license request for Appliance ID: <%= @license.appliance_id %> was not approved. This is often caused by an incomplete application or the project information lacking important detail.
+Your license request for Appliance ID: <%= @license.appliance_id %> remains pending. This is often caused by an incomplete application, the project information lacking important detail, or licensing requirements for commercial use.
 
-You should receive a separate email directly from our reviewer describing the issue with your application. If you haven't received this email in the next 24-48 hours, please contact us at <%= $SUPPORT_EMAIL %>, referencing the License Application ID: <%= @license.id %> and the Appliance ID: <%= @license.appliance_id %>.
+You should receive a separate email directly from our reviewer describing what is needed for your application. If you haven't received this email within a few hours, please contact us at <%= $SUPPORT_EMAIL %>. When writing to us, please reference the License Application ID: <%= @license.id %> and the Appliance ID: <%= @license.appliance_id %>.
 
 We look forward to getting your application approved.
 

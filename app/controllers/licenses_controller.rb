@@ -34,7 +34,7 @@ class LicensesController < ApplicationController
     @license = License.find(params[:id])
 
     # for non-admins allow editing only in "pending" state
-    if helpers.current_user_admin? || @license.approval_status === License.approval_statuses[:pending]
+    if helpers.current_user_admin? || @license.approval_status == License.approval_statuses[:pending]
       render action: :edit
     else
       render action: :show
@@ -43,13 +43,18 @@ class LicensesController < ApplicationController
 
   def show
     @license = License.find_by(id: params[:id])
-    @license.latest = (@license.id === @max_ids[@license.appliance_id])
+    @license.latest = (@license.id == @max_ids[@license.appliance_id])
     render action: :show
   end
 
   def approve
-    approve_license(params[:id])
-    flash[:success] = "License with ID: #{params[:id]} has been approved. The user has been notified."
+    error = approve_license(params[:id])
+
+    if error.empty?
+      flash[:success] = "License with ID: #{params[:id]} has been approved. The user has been notified."
+    else
+      flash[:error] = error
+    end
     redirect_to licenses_path
   end
 
@@ -60,9 +65,14 @@ class LicensesController < ApplicationController
     license.license_key = nil
     license.save
     mail_user = helpers.find_user_by_bp_username(license.bp_username)
-    # notify user of application disapproved
-    NotifierMailer.with(user: mail_user, license: license).license_request_disapproved.deliver_now
-    flash[:success] = "License with ID: #{license.id} has been disapproved. The user has been notified. Please contact them at #{mail_user.email} with additional detail."
+
+    if mail_user
+      # notify user of application disapproved
+      NotifierMailer.with(user: mail_user, license: license).license_request_disapproved.deliver_now
+      flash[:success] = "License with ID: #{license.id} has been disapproved. The user has been notified. Please contact them at #{mail_user.email} with additional detail."
+    else
+      flash[:success] = "License with ID: #{license.id} has been disapproved, but the user #{license.bp_username} no longer exists in our system."
+    end
     redirect_to licenses_path
   end
 
@@ -80,21 +90,25 @@ class LicensesController < ApplicationController
       render action: :new
     else
       success = "New #{license_id_msg(@license)} has been successfully created."
+      error = ''
       mail_user = helpers.current_user_admin? ? helpers.find_user_by_bp_username(@license.bp_username) : session[:user]
       # notify user of application received, but only if it's not yet approved,
       # which can happen when an admin creates an application for someone else
-      NotifierMailer.with(user: mail_user, license: @license).license_request_submitted.deliver_now unless @license.approval_status === License.approval_statuses[:approved]
+      NotifierMailer.with(user: mail_user, license: @license).license_request_submitted.deliver_now unless @license.approval_status == License.approval_statuses[:approved]
       # notify admin of application received unless admin herself is the one
       # creating the request for someone else
       NotifierMailer.with(license: @license).license_request_submitted_admin.deliver_now unless helpers.current_user_admin?
 
-      if @license.approval_status === License.approval_statuses[:approved]
+      if @license.approval_status == License.approval_statuses[:approved]
         params[:id] = @license.id
-        approve_license(@license.id)
-        success << " A license key has been generated and emailed to the user."
-      end
+        error = approve_license(@license.id)
 
-      flash[:success] = success
+        if error.empty?
+          success << " A license key has been generated and emailed to the user."
+        end
+      end
+      flash[:success] = success unless success.empty?
+      flash[:error] = error unless error.empty?
       redirect_to licenses_path
     end
   end
@@ -131,8 +145,8 @@ class LicensesController < ApplicationController
 
     lic_arr.each do |lic|
       color = lic.appliance_id[0..5]
-      lic.row_color = color === $LEGACY_APPLIANCE_ID[0..5] ? '' : color.paint.spin(30).opacity(0.1).to_rgb
-      lic.latest = (lic.id === @max_ids[lic.appliance_id])
+      lic.row_color = color == $LEGACY_APPLIANCE_ID[0..5] ? '' : color.paint.spin(30).opacity(0.1).to_rgb
+      lic.latest = (lic.id == @max_ids[lic.appliance_id])
 
       if lic_hash[lic.appliance_id]
         lic_hash[lic.appliance_id] << lic
@@ -145,6 +159,7 @@ class LicensesController < ApplicationController
   end
 
   def approve_license(id)
+    error = ''
     license = License.find(id)
     license.approval_status = License.approval_statuses[:approved]
 
@@ -157,11 +172,16 @@ class LicensesController < ApplicationController
       lic_key = EncryptionUtil.encrypt(private_key, raw_data)
       license.license_key = lic_key
     end
-
     license.save
     mail_user = helpers.find_user_by_bp_username(license.bp_username)
-    # notify user of application approved
-    NotifierMailer.with(user: mail_user, license: license).license_request_approved.deliver_now
+
+    if mail_user
+      # notify user of application approved
+      NotifierMailer.with(user: mail_user, license: license).license_request_approved.deliver_now
+    else
+      error = "License with ID: #{license.id} has been approved, but the user #{license.bp_username} no longer exists in our system."
+    end
+    error
   end
 
   def save_license_from_params()

@@ -22,7 +22,9 @@ class LoginController < ApplicationController
   def create
     @errors = validate(params[:user])
 
-    unless @errors[:error]
+    if @errors[:error]
+      render action: 'index'
+    else
       logged_in_user = LinkedData::Client::Models::User.authenticate(params[:user][:username], params[:user][:password])
 
       if logged_in_user&.apikey && !logged_in_user.errors && !logged_in_user.error
@@ -48,8 +50,6 @@ class LoginController < ApplicationController
         @errors = Hash[:error, OpenStruct.new(user_username: error, user_password: dummy_error)]
         render action: 'index'
       end
-    else
-      render action: 'index'
     end
   end
 
