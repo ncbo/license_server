@@ -65,13 +65,14 @@ class LicensesController < ApplicationController
     license.license_key = nil
     license.save
     mail_user = helpers.find_user_by_bp_username(license.bp_username)
+    success = "License with ID: #{license.id} has been disapproved"
 
     if mail_user
       # notify user of application disapproved
       NotifierMailer.with(user: mail_user, license: license).license_request_disapproved.deliver_now
-      flash[:success] = "License with ID: #{license.id} has been disapproved. The user has been notified. Please contact them at #{mail_user.email} with additional detail."
+      flash[:success] = "#{success}. The user has been notified. Please contact them at #{mail_user.email} with additional detail."
     else
-      flash[:success] = "License with ID: #{license.id} has been disapproved, but the user #{license.bp_username} no longer exists in our system."
+      flash[:error] = "#{success}, but the user #{license.bp_username} no longer exists in our system."
     end
     redirect_to licenses_path
   end
@@ -102,10 +103,7 @@ class LicensesController < ApplicationController
       if @license.approval_status == License.approval_statuses[:approved]
         params[:id] = @license.id
         error = approve_license(@license.id)
-
-        if error.empty?
-          success << " A license key has been generated and emailed to the user."
-        end
+        success << ' A license key has been generated and emailed to the user.' if error.empty?
       end
       flash[:success] = success unless success.empty?
       flash[:error] = error unless error.empty?
