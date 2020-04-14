@@ -1,14 +1,14 @@
 # config valid for current version and patch releases of Capistrano
-#lock "~> 3.12.0"
+# lock "~> 3.12.0"
 
-set :application, "license_server"
+set :application, 'license_server'
 set :repo_url, "git@github.com:ncbo/#{fetch(:application)}"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, "/srv/rails/#{fetch(:application)}"
+set :deploy_to, "/srv/ontoportal/#{fetch(:application)}"
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
@@ -49,7 +49,7 @@ set :bundle_flags, '--without development test --deployment'
 
 # set up crontab on all application servers(instead of default :db role); remove this setting for
 # installing up crontab job only on one node
-set :whenever_roles,  [ :app ]
+set :whenever_roles, [:app]
 
 namespace :deploy do
 
@@ -81,5 +81,5 @@ namespace :deploy do
 
   after :updating, :get_config
 
-  end
+end
 
