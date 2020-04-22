@@ -4,11 +4,18 @@
   %tbody
     - if @license.id && current_user_admin?
       %tr
-        %th License ID:
+        %th{style: "padding-top:10px"} License ID:
         %td.top= @license.id
     %tr
-      %th Appliance ID: *
-      %td.top= text_field :license, :appliance_id, value: @license.appliance_id, required: true, title: "Please enter a valid Appliance ID", oninvalid: "setCustomValidityOverride(this)", oninput: "setCustomValidityOverride(this)", class: "required"
+      - if @license.license_key
+        %th{style: "padding-top:10px"} Appliance ID:
+        %td.top
+          = @license.appliance_id
+          = hidden_field :license, :appliance_id, value: @license.appliance_id
+      - else
+        %th Appliance ID: *
+        %td.top
+          = text_field :license, :appliance_id, value: @license.appliance_id, required: true, title: "Please enter a valid Appliance ID", oninvalid: "setCustomValidityOverride(this)", oninput: "setCustomValidityOverride(this)", class: "required"
     - if current_user_admin?
       %tr
         %th BioPortal Username: *
