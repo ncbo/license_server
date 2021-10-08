@@ -193,7 +193,8 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (4.0.6)
-    puma (3.12.6)
+    puma (4.3.8)
+      nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.5.2)
     rack (2.2.3)
@@ -336,7 +337,7 @@ DEPENDENCIES
   mysql2 (>= 0.3.18, < 0.6.0)
   ontologies_api_client!
   pry
-  puma (~> 3.7)
+  puma (~> 4.3)
   rails (~> 5.1.7)
   rest-client
   rubocop
