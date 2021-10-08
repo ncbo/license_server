@@ -62,20 +62,23 @@ end
 
 # deployment group for jenkins/capistrano deployments
 group :deployment, :development do
-  #capistrano deployment
+  # capistrano deployment
   gem 'capistrano', '~> 3.12', require: false
-  gem 'capistrano-rails', '~> 1.4', require: false
   gem 'capistrano-passenger', require: false
+  gem 'capistrano-rails', '~> 1.4', require: false
   gem 'capistrano-rails-db', require: false
 end
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
-  gem 'web-console', '>= 3.3.0'
   gem 'listen', '>= 3.0.5', '< 3.2'
+  gem 'web-console', '>= 3.3.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  # security checks
+  gem 'brakeman', require: false
+  gem 'rubocop', require: false
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
