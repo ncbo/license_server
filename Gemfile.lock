@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/ncbo/ontologies_api_ruby_client.git
-  revision: 9227d273a51f7f214e6a6ec3b58f414abb6ba01c
-  tag: v2.0.0
+  revision: a0511937a06ecd38a1d347613e11dd656c51c9fa
+  branch: staging
   specs:
     ontologies_api_client (2.0.0)
       activesupport (~> 5.1.7)
@@ -150,9 +150,10 @@ GEM
       railties (>= 3.2.16)
     json (2.6.3)
     language_server-protocol (3.17.0.3)
-    listen (3.0.8)
+    listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
+      ruby_dep (~> 1.2)
     loofah (2.21.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -261,6 +262,7 @@ GEM
     ruby-progressbar (1.13.0)
     ruby-xxHash (0.4.0.2)
     ruby2_keywords (0.0.5)
+    ruby_dep (1.5.0)
     rubyzip (2.3.2)
     sass (3.7.4)
       sass-listen (~> 4.0.0)

@@ -8,6 +8,7 @@ end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.7'
+#gem 'rails', '~> 5.2.8.1'
 # Use mysql as the database for Active Record
 gem 'mysql2', '>= 0.3.18', '< 0.6.0'
 # gem "mysql2", "~> 0.4.0"
@@ -50,8 +51,8 @@ gem 'jbuilder', '~> 2.5'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
-#gem 'ontologies_api_client', github: 'ncbo/ontologies_api_ruby_client', tag: 'v2.2.4'
-gem 'ontologies_api_client', github: 'ncbo/ontologies_api_ruby_client', tag: 'v2.0.0'
+gem 'ontologies_api_client', :git => "https://github.com/ncbo/ontologies_api_ruby_client.git", branch: "staging"
+#gem 'ontologies_api_client', github: 'ncbo/ontologies_api_ruby_client', tag: 'v2.0.0'
 
 
 group :development, :test do
