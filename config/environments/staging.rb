@@ -82,12 +82,12 @@ Rails.application.configure do
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
-  # memcache setup
-  # https://github.com/mperham/dalli#usage-with-rails-3x-and-4x
-  config.cache_store = :dalli_store, nil, { :namespace => 'LicenseServer', :expires_in => 1.day, :value_max_bytes => 5*1024*1024 }
-
   # Include LS-specific configuration options
   require Rails.root.join('config', "license_server_config_#{Rails.env}.rb")
+
+  # memcache setup
+  # https://guides.rubyonrails.org/caching_with_rails.html
+  config.cache_store = :mem_cache_store, ENV["MEMCACHE_SERVERS"] || "localhost:11211", { namespace: 'LicenseServer', expires_in: 1.day }
 
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
