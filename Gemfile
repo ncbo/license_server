@@ -50,7 +50,9 @@ gem 'jbuilder', '~> 2.5'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
-gem 'ontologies_api_client', :git => "https://github.com/ncbo/ontologies_api_ruby_client.git", branch: "staging"
+#gem 'ontologies_api_client', github: 'ncbo/ontologies_api_ruby_client', tag: 'v2.2.4'
+gem 'ontologies_api_client', github: 'ncbo/ontologies_api_ruby_client', tag: 'v2.0.0'
+
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -63,10 +65,13 @@ end
 # deployment group for jenkins/capistrano deployments
 group :deployment, :development do
   # capistrano deployment
-  gem 'capistrano', '~> 3.12', require: false
+  gem 'bcrypt_pbkdf', '>= 1.0', '< 2.0', require: false # https://github.com/miloserdow/capistrano-deploy/issues/42
+  gem 'capistrano', '~> 3.17', require: false
+  gem 'capistrano-rbenv', require: false
   gem 'capistrano-passenger', require: false
   gem 'capistrano-rails', '~> 1.4', require: false
   gem 'capistrano-rails-db', require: false
+  gem 'ed25519', '>= 1.2', '< 2.0', require: false # https://github.com/miloserdow/capistrano-deploy/issues/42
 end
 
 group :development do

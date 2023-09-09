@@ -41,6 +41,10 @@ set :keep_releases, 5
 
 set :bundle_flags, '--without development test --deployment'
 
+# rbenv ruby version
+set :rbenv_type, :system
+set :rbenv_ruby, File.read('.ruby-version').strip
+
 #If you want to restart using `passenger-config restart-app`, add this to your config/deploy.rb:
 #set :passenger_restart_with_touch, false # Note that `nil` is NOT the same as `false` here
 #If you don't set `:passenger_restart_with_touch`, capistrano-passenger will check what version of passenger you are running
