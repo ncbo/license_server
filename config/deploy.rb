@@ -39,7 +39,9 @@ set :keep_releases, 5
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
 
-set :bundle_flags, '--without development test --deployment'
+set :keep_releases, 5
+set :bundle_without, 'development:test'
+set :bundle_config, { deployment: true }
 
 # rbenv ruby version
 set :rbenv_type, :system
