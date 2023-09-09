@@ -29,7 +29,6 @@ config/deploy/*
 
 config/keys/private.pem
 data
-.ruby-version
 
 # Ignore editor files
 .idea
