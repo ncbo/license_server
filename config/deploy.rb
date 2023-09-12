@@ -47,11 +47,12 @@ set :bundle_config, { deployment: true }
 set :rbenv_type, :system
 set :rbenv_ruby, File.read('.ruby-version').strip
 
-#If you want to restart using `passenger-config restart-app`, add this to your config/deploy.rb:
-#set :passenger_restart_with_touch, false # Note that `nil` is NOT the same as `false` here
-#If you don't set `:passenger_restart_with_touch`, capistrano-passenger will check what version of passenger you are running
-#and use `passenger-config restart-app` if it is available in that version.
-# set :passenger_restart_with_touch, false
+# If you want to restart using `passenger-config restart-app`, add this to your config/deploy.rb:
+# set :passenger_restart_with_touch, false # Note that `nil` is NOT the same as `false` here
+# If you don't set `:passenger_restart_with_touch`, capistrano-passenger will check what version of passenger you are running
+# and use `passenger-config restart-app` if it is available in that version.
+
+set :passenger_restart_with_touch, true
 
 # set up crontab on all application servers(instead of default :db role); remove this setting for
 # installing up crontab job only on one node
@@ -59,7 +60,7 @@ set :whenever_roles, [:app]
 
 namespace :deploy do
 
-  desc 'display remote system env vars' 
+  desc 'display remote system env vars'
   task :show_remote_env do
     on roles(:all) do
       remote_env = capture("env")
@@ -68,24 +69,22 @@ namespace :deploy do
   end
 
   desc 'Incorporate the bioportal_conf private repository content'
-  #Get cofiguration from repo if PRIVATE_CONFIG_REPO env var is set 
-  #or get config from local directory if LOCAL_CONFIG_PATH env var is set 
+  # Get cofiguration from repo if PRIVATE_CONFIG_REPO env var is set
+  # or get config from local directory if LOCAL_CONFIG_PATH env var is set
   task :get_config do
-     if defined?(PRIVATE_CONFIG_REPO)
-       TMP_CONFIG_PATH = "/tmp/#{SecureRandom.hex(15)}"
-       on roles(:web) do
-          execute "git clone -q #{PRIVATE_CONFIG_REPO} #{TMP_CONFIG_PATH}"
-          execute "rsync -av #{TMP_CONFIG_PATH}/#{fetch(:application)}/ #{release_path}/"
-          execute "rm -rf #{TMP_CONFIG_PATH}"
-       end
-     elsif defined?(LOCAL_CONFIG_PATH) 
-       on roles(:web) do
-          execute "rsync -av #{LOCAL_CONFIG_PATH}/#{fetch(:application)}/ #{release_path}/"
-       end
-     end
+    if defined?(PRIVATE_CONFIG_REPO)
+      TMP_CONFIG_PATH = "/tmp/#{SecureRandom.hex(15)}"
+      on roles(:app) do
+        execute "git clone -q #{PRIVATE_CONFIG_REPO} #{TMP_CONFIG_PATH}"
+        execute "rsync -av #{TMP_CONFIG_PATH}/#{fetch(:application)}/ #{release_path}/"
+        execute "rm -rf #{TMP_CONFIG_PATH}"
+      end
+    elsif defined?(LOCAL_CONFIG_PATH)
+      on roles(:app) do
+        execute "rsync -av #{LOCAL_CONFIG_PATH}/#{fetch(:application)}/ #{release_path}/"
+      end
+    end
   end
 
   after :updating, :get_config
-
 end
-
