@@ -8,8 +8,12 @@ end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.7'
-#gem 'rails', '~> 5.2.8.1'
 # Use mysql as the database for Active Record
+
+# pinning farday to v1 to make it compatible with ncbo/ontologies_api_ruby_client v2.0.0
+# remove this pin after updating rails to 5.2 and ontologies_api_ruby_client v2.0.2+
+gem 'faraday', '~> 1.10' # pinning to v1 to make it compatible with ncbo/ontologies_api_ruby_client v2.0.0?
+
 gem 'mysql2', '>= 0.3.18', '< 0.6.0'
 # gem "mysql2", "~> 0.4.0"
 # Use Puma as the app server
@@ -49,8 +53,6 @@ gem 'jbuilder', '~> 2.5'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
 gem 'ontologies_api_client', github: 'ncbo/ontologies_api_ruby_client', tag: 'v2.0.0'
 
 
