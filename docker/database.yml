@@ -1,0 +1,21 @@
+# Container database config (copied to config/database.yml by the entrypoint).
+default: &default
+  adapter: mysql2
+  encoding: utf8mb4
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
+  username: <%= ENV.fetch("DB_USERNAME", "root") %>
+  password: <%= ENV.fetch("DB_PASSWORD", "") %>
+  host: <%= ENV.fetch("DB_HOST", "db") %>
+  port: <%= ENV.fetch("DB_PORT", 3306) %>
+
+production:
+  <<: *default
+  database: <%= ENV.fetch("DB_NAME", "license_server_production") %>
+
+development:
+  <<: *default
+  database: <%= ENV.fetch("DB_NAME", "license_server_development") %>
+
+test:
+  <<: *default
+  database: <%= ENV.fetch("DB_NAME", "license_server_test") %>

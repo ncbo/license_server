@@ -8,7 +8,6 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require rails-ujs
-//= require turbolinks
 //= require jquery3
 //= require jquery-ui
 //= require bootstrap-sprockets

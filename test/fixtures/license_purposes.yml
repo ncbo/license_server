@@ -1,9 +1,10 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# Valid LicensePurpose fixtures (the original scaffold used a non-existent `order`
+# column and duplicate values). Columns: name, sort_order (unique, not null).
 
-one:
-  name: MyString
-  order: 1
+research_individual:
+  name: "Non-Profit Research - Individual"
+  sort_order: 1
 
-two:
-  name: MyString
-  order: 1
+education:
+  name: "Education"
+  sort_order: 4

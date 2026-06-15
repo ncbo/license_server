@@ -1,0 +1,20 @@
+# Keep secrets, local state, and bulky dirs out of the build context/image.
+.git
+.github
+tmp
+log
+public/assets
+node_modules
+vendor/bundle
+docs
+CLAUDE.md
+# (test/ is intentionally kept so the suite can run inside the image)
+# Gitignored real config / keys (the container generates config from ENV instead)
+config/license_server_config*.rb
+config/database.yml
+config/secrets.yml
+config/keys/private.pem
+config/deploy/*
+.env
+*.swp
+**/.DS_Store

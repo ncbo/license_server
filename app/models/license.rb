@@ -1,5 +1,5 @@
 class License < ApplicationRecord
-  enum approval_status: {
+  enum :approval_status, {
       approved: "approved",
       disapproved: "disapproved",
       pending: "pending"

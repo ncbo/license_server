@@ -1,0 +1,55 @@
+name: Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpass
+        ports:
+          - "3306:3306"
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -prootpass"
+          --health-interval=5s --health-timeout=3s --health-retries=20
+
+    env:
+      RAILS_ENV: test
+      DB_HOST: 127.0.0.1
+      DB_USERNAME: root
+      DB_PASSWORD: rootpass
+      BUNDLE_WITHOUT: deployment   # skip the Capistrano group in CI
+      # Tests stub the BioPortal API, so these are placeholders.
+      BP_REST_URL: https://data.bioontology.org
+      API_KEY: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install MySQL client headers (for the mysql2 native gem)
+        run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2.9"
+          bundler-cache: true
+
+      - name: Generate test config + RSA keys
+        run: |
+          cp docker/license_server_config.rb config/license_server_config_test.rb
+          cp docker/database.yml config/database.yml
+          openssl genrsa -out config/keys/private.pem 2048
+          openssl rsa -in config/keys/private.pem -pubout -out config/keys/public.pem
+
+      - name: Prepare the test database
+        run: bin/rails db:prepare
+
+      - name: Run the test suite
+        run: bin/rails test

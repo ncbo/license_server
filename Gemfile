@@ -5,68 +5,54 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+# === Framework (path-C modernization: Rails 5.1.7 -> 8.0.3, Ruby 2.7.8 -> 3.2.9) ===
+gem 'rails', '8.0.3'
+gem 'puma', '~> 6.0'                 # was ~> 3.7; run puma directly (drop Passenger)
+gem 'bootsnap', require: false       # Rails 8 boot cache
+gem 'tzinfo-data', platforms: %i[windows jruby]
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.1.7'
-# Use mysql as the database for Active Record
+# Rails 8.0.x compatibility pins (mirrors bioportal_web_ui)
+gem 'concurrent-ruby', '= 1.3.4'     # ActiveSupport logger bug on 8.0.x
+gem 'connection_pool', '< 3'         # connection_pool 3 breaks MemCacheStore on 8.0.x
 
-# pinning farday to v1 to make it compatible with ncbo/ontologies_api_ruby_client v2.0.0
-# remove this pin after updating rails to 5.2 and ontologies_api_ruby_client v2.0.2+
-gem 'faraday', '~> 1.10' # pinning to v1 to make it compatible with ncbo/ontologies_api_ruby_client v2.0.0?
+# === Database / cache ===
+gem 'mysql2'                         # was '>= 0.3.18', '< 0.6.0'
+gem 'dalli'                          # memcached (:mem_cache_store)
 
-gem 'mysql2', '>= 0.3.18', '< 0.6.0'
-# gem "mysql2", "~> 0.4.0"
-# Use Puma as the app server
-gem 'puma', '~> 3.7'
-# Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
-# See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
-
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2'
-
-gem 'pry'
+# === Asset pipeline (kept on Sprockets per decision) ===
+gem 'sprockets-rails'
+gem 'sassc-rails'                    # SCSS for Sprockets (replaces sass-rails ~> 5.0)
+gem 'terser'                         # replaces uglifier
+gem 'bootstrap', '~> 4.6'            # was ~> 4.1.0 (keep Bootstrap 4 look)
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
-gem 'bootstrap', '~> 4.1.0'
+
+# === Views / domain helpers ===
+gem 'haml', '~> 6.1'                 # was unversioned (5.x)
+gem 'chroma'                         # per-appliance license row colors
+gem 'uuid'                           # appliance-id validation
+gem 'fugit'                          # cron parsing (schedule.rb / cron_parser)
+gem 'ruby-xxHash'                    # deterministic per-host cron minute jitter
 gem 'rest-client'
 gem 'multi_json'
-gem 'haml'
-gem 'dalli'
-gem 'uuid'
-gem 'chroma'
-gem 'ruby-xxHash'
-gem 'fugit'
+gem 'oj'                             # fast JSON (client uses it)
+gem 'activerecord-import', require: false  # batch:import_initial_data
 
-gem 'activerecord-import', require: false
+# Ruby 3.x stdlib gems now bundled explicitly (mirrors web_ui)
+gem 'ffi'
+gem 'net-http'
+gem 'net-ftp', require: false
+
+# === BioPortal API client (modern tag; brings faraday 2.x — replaces the v2.0.0
+# pin + the faraday ~> 1.10 stopgap). Spike-verified against the live API. ===
+gem 'ontologies_api_client', github: 'ncbo/ontologies_api_ruby_client', tag: 'v2.9.0'
+
+gem 'pry'
+
 gem 'whenever', group: :deployment, require: false
 
-# Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem 'turbolinks', '~> 5'
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.5'
-# Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 4.0'
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
-
-gem 'ontologies_api_client', github: 'ncbo/ontologies_api_ruby_client', tag: 'v2.0.0'
-
-
-group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '>= 2.15'
-  gem 'selenium-webdriver'
-end
-
-# deployment group for jenkins/capistrano deployments
+# deployment group for capistrano deployments
 group :deployment, :development do
-  # capistrano deployment
   gem 'bcrypt_pbkdf', '>= 1.0', '< 2.0', require: false # https://github.com/miloserdow/capistrano-deploy/issues/42
   gem 'capistrano', '~> 3.17', require: false
   gem 'capistrano-rbenv', require: false
@@ -76,17 +62,23 @@ group :deployment, :development do
   gem 'ed25519', '>= 1.2', '< 2.0', require: false # https://github.com/miloserdow/capistrano-deploy/issues/42
 end
 
+group :development, :test do
+  gem 'debug', platforms: %i[mri windows]  # replaces byebug
+  gem 'capybara', '>= 2.15'
+  gem 'selenium-webdriver'
+end
+
 group :development do
-  # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
-  gem 'listen', '>= 3.0.5', '< 3.2'
-  gem 'web-console', '>= 3.3.0'
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
-  # security checks
+  gem 'listen'
+  gem 'web-console'
   gem 'brakeman', require: false
   gem 'rubocop', require: false
 end
 
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+# Rails 8's test runner is incompatible with minitest 6.x; pin to 5.x
+# (same fix bioportal_web_ui uses).
+gem 'minitest', '~> 5.25'
+
+group :test do
+  gem 'webmock'  # available to stub the two BioPortal API calls if needed
+end

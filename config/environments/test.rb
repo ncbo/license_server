@@ -23,7 +23,7 @@ Rails.application.configure do
   config.action_controller.perform_caching = false
 
   # Raise exceptions instead of rendering exception templates.
-  config.action_dispatch.show_exceptions = false
+  config.action_dispatch.show_exceptions = :none
 
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
@@ -39,6 +39,13 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # Load license-server config globals ($BP_REST_URL, $API_KEY, emails, key paths).
+  require Rails.root.join('config', "license_server_config_#{Rails.env}.rb")
+
+  # Sessions use the cache store (see config/initializers/session_store.rb); use an
+  # in-memory cache in tests so flash and session persist across redirects.
+  config.cache_store = :memory_store
 
   config.action_mailer.default_options = {
       from: $EMAIL_SENDER
